@@ -1,0 +1,9 @@
+/* responsive.css - overrides to fix distortion issues */
+
+/* Responsive scaling for large screens */
+@media (max-width: 1280px) {
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
+}
+

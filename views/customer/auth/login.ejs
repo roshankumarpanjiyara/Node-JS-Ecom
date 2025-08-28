@@ -1,0 +1,142 @@
+<%- include('../includes/head', {pageTitle: 'Login' }) %>
+    <style>
+        .text-group {
+            border: 1px solid #ececec;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            /* Optional: adds space between SVG and input */
+        }
+
+        .form-group .icon {
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .form-group input {
+            flex: 1;
+            border: none;
+        }
+    </style>
+    </head>
+
+    <body>
+        <%- include('../includes/header') %>
+            <main class="main pages">
+                <div class="page-header breadcrumb-wrap">
+                    <div class="container">
+                        <div class="breadcrumb">
+                            <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                            <span></span> Login
+                        </div>
+                    </div>
+                </div>
+                <div class="page-content pt-150 pb-150">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                                <div class="row">
+                                    <div class="col-lg-6 pr-30 d-none d-lg-block">
+                                        <img class="border-radius-15" src="/frontend/assets/imgs/page/login-2.png"
+                                            alt="" loading="lazy" />
+                                    </div>
+                                    <div class="col-lg-6 col-md-8">
+                                        <div class="login_wrap widget-taber-content background-white">
+                                            <div class="padding_eight_all bg-white">
+                                                <div class="heading_s1">
+                                                    <h1 class="mb-5">Login</h1>
+                                                    <p class="mb-30">Don't have an account? <a href="/signup">Create
+                                                            here</a></p>
+                                                </div>
+                                                <form method="post">
+                                                    <div class="form-group text-group">
+                                                        <span><svg class="icon svg-icon-ti-ti-mail"
+                                                                xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path
+                                                                    d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z">
+                                                                </path>
+                                                                <path d="M3 7l9 6l9 -6"></path>
+                                                            </svg></span>
+                                                        <input type="text" required="" name="email"
+                                                            placeholder="Email *" />
+                                                    </div>
+                                                    <div class="form-group text-group">
+                                                        <span><svg class="icon svg-icon-ti-ti-lock"
+                                                                xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path
+                                                                    d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z">
+                                                                </path>
+                                                                <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path>
+                                                                <path d="M8 11v-4a4 4 0 1 1 8 0v4"></path>
+                                                            </svg></span>
+                                                        <input required="" type="password" name="password" id="passwordInput"
+                                                            placeholder="Your password *" />
+                                                        <span onclick="togglePassword()" style="cursor:pointer; margin-right: 10px;">
+                                                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg"
+                                                                width="24" height="24" fill="none" stroke="currentColor"
+                                                                stroke-width="2" stroke-linecap="round"
+                                                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                                                <path
+                                                                    d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                                                                <circle cx="12" cy="12" r="3" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                    <!-- <div class="login_footer form-group">
+                                                    <div class="chek-form">
+                                                        <input type="text" required="" name="email" placeholder="Security code *" />
+                                                    </div>
+                                                    <span class="security-code">
+                                                        <b class="text-new">8</b>
+                                                        <b class="text-hot">6</b>
+                                                        <b class="text-sale">7</b>
+                                                        <b class="text-best">5</b>
+                                                    </span>
+                                                </div> -->
+                                                    <div class="login_footer form-group mb-50">
+                                                        <div class="chek-form">
+                                                            <div class="custome-checkbox">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="checkbox" id="exampleCheckbox1" value="" />
+                                                                <label class="form-check-label"
+                                                                    for="exampleCheckbox1"><span>Remember
+                                                                        me</span></label>
+                                                            </div>
+                                                        </div>
+                                                        <a class="text-muted" href="#">Forgot password?</a>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-heading btn-block hover-up"
+                                                            name="login">Log in</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <script>
+                function togglePassword() {
+                    const input = document.getElementById('passwordInput');
+                    const eyeIcon = document.getElementById('eyeIcon');
+                    if (input.type === "password") {
+                        input.type = "text";
+                        eyeIcon.innerHTML = `<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>`; // eye-off
+                    } else {
+                        input.type = "password";
+                        eyeIcon.innerHTML = `<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>`; // eye
+                    }
+                }
+            </script>
+            <%- include('../includes/footer') %>

@@ -1,0 +1,28 @@
+{
+  "name": "node-js-ecom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roshankumarpanjiyara/Node-JS-Ecom.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roshankumarpanjiyara/Node-JS-Ecom/issues"
+  },
+  "homepage": "https://github.com/roshankumarpanjiyara/Node-JS-Ecom#readme",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
