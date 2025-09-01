@@ -1,0 +1,27 @@
+<% if (alert && alert.length> 0) { %>
+  <script nonce="<%= nonce %>" src="/js/sweetalert2.all.min.js"></script>
+  <script nonce="<%= nonce %>">
+    // Swal.fire({
+    //   icon: '<%= alert[0].type %>',  // success | error
+    //   title: '<%= alert[0].message %>',
+    //   showConfirmButton: false,
+    //   timer: 2000
+    // });
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: '<%= alert[0].type %>',
+      title: '<%= alert[0].message %>'
+    });
+  </script>
+  <% } %>

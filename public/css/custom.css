@@ -1,0 +1,26 @@
+.text-group {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* Optional: adds space between SVG and input */
+}
+
+.form-group .icon {
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.form-group input {
+    flex: 1;
+    border: none;
+}
+
+.error {
+    color: rgb(250, 118, 118);
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: bold;
+
+}
