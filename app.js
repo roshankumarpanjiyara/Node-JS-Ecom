@@ -12,9 +12,11 @@ const crypto = require("crypto");
 const db = require('./database/database');
 const addCsrfTokenMiddleware = require('./middleware/csrf-token');
 const handleErrorMiddleware = require('./middleware/error-handler');
-const authRoutes = require('./routes/auth.routes');
-const pageRoutes = require('./routes/page.routes');
 const { attachUser } = require('./middleware/authMiddleware');
+
+const authRoutes = require('./routes/auth.routes');
+const adminRoutes = require('./routes/admin.routes');
+const pageRoutes = require('./routes/page.routes');
 
 const app = express();
 
@@ -76,6 +78,7 @@ app.use(
 
 app.use(addCsrfTokenMiddleware);
 
+app.use('/admin', adminRoutes);
 app.use(pageRoutes);
 app.use(authRoutes);
 

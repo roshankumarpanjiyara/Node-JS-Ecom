@@ -8,7 +8,7 @@ async function seed() {
 
     try {
         await client.connect();
-        const db = client.db(); // default DB from your URI
+        const db = client.db(process.env.DB_NAME); // default DB from your URI
         const users = db.collection("users");
 
         // Hash passwords

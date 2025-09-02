@@ -46,7 +46,7 @@
                                                                         </path>
                                                                     </svg></span>
                                                                 <input type="text" name="name"
-                                                                    placeholder="Name"
+                                                                    placeholder="Name" autocomplete="off" 
                                                                     value="<%= (old && old.name) || '' %>" />
                                                             </div>
                                                             <% if (errors && errors.name) { %>
@@ -68,7 +68,7 @@
                                                                         <path d="M3 7l9 6l9 -6"></path>
                                                                     </svg></span>
                                                                 <input type="text" name="email"
-                                                                    placeholder="Email"
+                                                                    placeholder="Email" autocomplete="off" 
                                                                     value="<%= (old && old.email) || '' %>" />
                                                             </div>
 
@@ -90,7 +90,7 @@
                                                                         </path>
                                                                     </svg></span>
                                                                 <input type="text" name="phone"
-                                                                    placeholder="Phone Number"
+                                                                    placeholder="Phone Number" autocomplete="off" 
                                                                     title="Enter a valid 10-digit phone number" />
                                                             </div>
 

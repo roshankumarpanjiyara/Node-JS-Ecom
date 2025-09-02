@@ -46,7 +46,7 @@
                                                                         <path d="M3 7l9 6l9 -6"></path>
                                                                     </svg></span>
                                                                 <input type="text" name="email"
-                                                                    placeholder="Email *"
+                                                                    placeholder="Email *" autocomplete="off" 
                                                                     value="<%= (old && old.email) || '' %>" />
                                                             </div>
                                                             <% if (errors && errors.email) { %><span class="error">
@@ -68,7 +68,7 @@
                                                                         </path>
                                                                         <path d="M8 11v-4a4 4 0 1 1 8 0v4"></path>
                                                                     </svg></span>
-                                                                <input type="password" name="password"
+                                                                <input type="password" name="password" autocomplete="off"
                                                                     id="passwordInput" placeholder="Your password *" />
                                                                 <span id="togglePassword"
                                                                     style="cursor:pointer; margin-right: 10px;">

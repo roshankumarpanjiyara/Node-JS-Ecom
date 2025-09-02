@@ -47,4 +47,18 @@ function requireRole(role) {
   };
 }
 
-module.exports = { requireAuth, requireRole, attachUser };
+function requireUser(req, res, next) {
+  if (!req.user || req.user.role !== "user") {
+    return res.status(403).send("Forbidden: Users only");
+  }
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).send("Forbidden: Admins only");
+  }
+  next();
+}
+
+module.exports = { requireAuth, requireRole, attachUser, requireUser, requireAdmin };
