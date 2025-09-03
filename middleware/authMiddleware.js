@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 
 function requireAuth(req, res, next) {
   const token = req.cookies?.token;
-  if (!token) return res.redirect('/login');
+  // if (!token) return res.redirect('/login');
+  if(!token) {
+    console.log('No token found in cookies');
+    return res.redirect('/login');
+  }
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,14 +21,16 @@ function requireAuth(req, res, next) {
 }
 
 function attachUser(req, res, next) {
-  const token = req.cookies.token; // JWT stored in cookie
+  const token = req.cookies?.token; // JWT stored in cookie
   if (!token) {
+    req.user = null;
     res.locals.user = null;
     return next();
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     // Attach user info to res.locals for EJS templates
     res.locals.user = {
       id: decoded.sub,
@@ -34,31 +40,22 @@ function attachUser(req, res, next) {
     };
   } catch (err) {
     // If token expired or invalid, treat as not logged in
+    req.user = null;
     res.locals.user = null;
   }
   next();
 }
 
-function requireRole(role) {
+function requireRole(role, redirectPath = '/login') {
   return (req, res, next) => {
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) return res.redirect(redirectPath);
     if (req.user.role !== role) return res.status(403).send('Forbidden');
     next();
   };
 }
 
-function requireUser(req, res, next) {
-  if (!req.user || req.user.role !== "user") {
-    return res.status(403).send("Forbidden: Users only");
-  }
-  next();
-}
-
-function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== "admin") {
-    return res.status(403).send("Forbidden: Admins only");
-  }
-  next();
-}
+// Helpers
+const requireUser = requireRole("user", '/login');
+const requireAdmin = requireRole("admin", '/admin/login');
 
 module.exports = { requireAuth, requireRole, attachUser, requireUser, requireAdmin };

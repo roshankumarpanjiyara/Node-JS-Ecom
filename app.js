@@ -9,10 +9,10 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const crypto = require("crypto");
 
-const db = require('./database/database');
+const { connectToDatabase } = require('./database/database');
+const { attachUser } = require('./middleware/authMiddleware');
 const addCsrfTokenMiddleware = require('./middleware/csrf-token');
 const handleErrorMiddleware = require('./middleware/error-handler');
-const { attachUser } = require('./middleware/authMiddleware');
 
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -20,73 +20,73 @@ const pageRoutes = require('./routes/page.routes');
 
 const app = express();
 
-// Security & perf
-// app.use(helmet());
+// ---------------- Security & Performance ----------------
+app.use(helmet());
 app.use(compression());
 
+// ---------------- Session ----------------
 app.use(session({
-  secret: "6532c98d9751d835da35bf0f744ffa5103f8868733a3539839f00c788338f323da881bf68dfd27dd560c0ad1c46ea99345b8841577944ecda82211d1fdbb38ba",
+  secret: process.env.SESSION_SECRET || "default_secret",
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 }));
+
+// ---------------- Flash messages ----------------
 app.use(flash());
-
-// Generate nonce for each request (for CSP inline script safety)
-app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString("base64");
-  // res.locals.alert = req.flash("alert");
-  next();
-});
-
 app.use((req, res, next) => {
   res.locals.alert = req.flash("alert");
   next();
 });
 
-// Helmet with CSP
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", "https:"],          // still safe for JS
-    styleSrc: ["'self'", "'unsafe-inline'", "https:"], // allow inline Tailwind classes
-    imgSrc: ["'self'", "data:"]
-  }
-}));
+// ---------------- Nonce for CSP inline scripts ----------------
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  next();
+});
 
-
-
+// ---------------- View Engine & Body Parser ----------------
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 
-// Cookies
+// ---------------- Cookies ----------------
 app.use(cookieParser());
 
+// ---------------- Attach User to res.locals ----------------
 app.use(attachUser);
 
-// CSRF protection via cookies (double-submit cookie pattern)
+// ---------------- CSRF Protection ----------------
 app.use(
   csrf({
     cookie: {
       httpOnly: true,          // token cookie not accessible by JS
       sameSite: process.env.SAMESITE || 'strict',
       secure: process.env.COOKIE_SECURE === 'true',
+      // path: "/",
     },
   })
 );
+// app.use(csrf());
 
+// ---------------- Custom Middleware ----------------
 app.use(addCsrfTokenMiddleware);
 
-app.use('/admin', adminRoutes);
-app.use(pageRoutes);
-app.use(authRoutes);
+// ---------------- Routes ----------------
+app.use('/admin', adminRoutes);  // Admin login + dashboard
+app.use(authRoutes);             // User login/signup/logout
+app.use(pageRoutes);             // Public pages
 
+// ---------------- Error Handling ----------------
 app.use(handleErrorMiddleware);
 
-db.connectToDatabase().then(function () {
-  app.listen(3000);
-}).catch(function (err) {
-  console.log('Failed to connect to the database');
-  console.log(err);
-});
+// ---------------- Start Server ----------------
+connectToDatabase()
+  .then(() => {
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server running on port ${process.env.PORT || 3000}`);
+    });
+  })
+  .catch(err => {
+    console.log('Failed to connect to database:', err);
+  });

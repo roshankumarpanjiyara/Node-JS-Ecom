@@ -1,27 +1,24 @@
-const mongodb = require('mongodb');
-const MongoClient = mongodb.MongoClient;
+const mongoose = require("mongoose");
 
-let database;
-
-async function connectToDatabase(){
+async function connectToDatabase() {
+  try {
     const uri = process.env.MONGO_URI;
     const dbName = process.env.DB_NAME;
 
-    const client = await MongoClient.connect(uri);
-    database = client.db(dbName);
+    // Connect to MongoDB with Mongoose
+    await mongoose.connect(uri, {
+      dbName,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    // Ensure indexes (unique email)
-    await database.collection('users').createIndex({ email: 1 }, { unique: true });
-}
-
-function getDb(){
-    if(!database){
-        throw new Error('Database not connected');
-    }
-    return database;
+    console.log("✅ Connected to MongoDB with Mongoose");
+  } catch (err) {
+    console.error("❌ Could not connect to MongoDB:", err.message);
+    process.exit(1);
+  }
 }
 
 module.exports = {
-    connectToDatabase: connectToDatabase,
-    getDb: getDb
-}
+  connectToDatabase,
+};

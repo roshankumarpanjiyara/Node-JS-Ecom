@@ -1,53 +1,61 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
+// ---------------- User Schema ----------------
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    phone: { type: String, required: true, unique: true, trim: true },
+    password: { type: String, required: true },
+    role: { type: String, default: "user" },
+  },
+  { timestamps: true }
+);
+
+const User = mongoose.model("User", userSchema);
+
+// ---------------- Seeder ----------------
 async function seed() {
-    const uri = process.env.MONGO_URI; // e.g. "mongodb://127.0.0.1:27017/ecommerce"
-    const client = new MongoClient(uri);
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: process.env.DB_NAME, // ensures correct DB
+    });
 
-    try {
-        await client.connect();
-        const db = client.db(process.env.DB_NAME); // default DB from your URI
-        const users = db.collection("users");
+    // Hash passwords
+    const adminPass = await bcrypt.hash("Admin@123", 12);
+    const userPass = await bcrypt.hash("User@123", 12);
 
-        // Hash passwords
-        const adminPass = await bcrypt.hash("Admin@123", 12);
-        const userPass = await bcrypt.hash("User@123", 12);
+    // Clear old users (optional)
+    // await User.deleteMany({});
 
-        // Clear old users (optional)
-        // await users.deleteMany({});
+    // Insert admin and user
+    await User.insertMany([
+      {
+        name: "Super Admin",
+        email: "admin@example.com",
+        phone: "1234567890",
+        password: adminPass,
+        role: "admin",
+      },
+      {
+        name: "Normal User",
+        email: "user@example.com",
+        phone: "0987654321",
+        password: userPass,
+        role: "user",
+      },
+    ]);
 
-        // Insert admin and user
-        await users.insertMany([
-            {
-                name: "Super Admin",
-                email: "admin@example.com",
-                phone: "1234567890",
-                password: adminPass,
-                role: "admin",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-            {
-                name: "Normal User",
-                email: "user@example.com",
-                phone: "0987654321",
-                password: userPass,
-                role: "user",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-        ]);
-
-        console.log("✅ Admin and User created successfully!");
-        console.log("👉 Admin login: admin@example.com / Admin@123");
-        console.log("👉 User login: user@example.com / User@123");
-    } catch (err) {
-        console.error("❌ Error seeding database:", err);
-    } finally {
-        await client.close();
-    }
+    console.log("✅ Admin and User created successfully!");
+    console.log("👉 Admin login: admin@example.com / Admin@123");
+    console.log("👉 User login: user@example.com / User@123");
+  } catch (err) {
+    console.error("❌ Error seeding database:", err);
+  } finally {
+    await mongoose.disconnect();
+  }
 }
 
 seed();

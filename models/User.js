@@ -1,10 +1,25 @@
-const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const ObjectId = mongodb.ObjectId;
+// const ObjectId = mongodb.ObjectId;
 
-const db = require('../database/database');
+// const db = require('../database/database');
+
+// ---------------- User Schema ----------------
+const userSchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true, trim: true },
+        email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+        phone: { type: String, required: true, unique: true, trim: true },
+        password: { type: String, required: true },
+        role: { type: String, default: "user" },
+    },
+    { timestamps: true }
+);
+
+// ---------------- Mongoose Model ----------------
+const UserModel = mongoose.model("User", userSchema);
 
 class User {
     constructor(name, email, phone, password, id) {
@@ -12,49 +27,45 @@ class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
-        if(id){
-            this.id = new ObjectId(id);
+        if (id) {
+            this.id = id;
         }
     }
 
-    async findByEmail(){
-        if(!this.email){
+    async findByEmail() {
+        if (!this.email) {
             return;
         }
-        const user = await db.getDb().collection('users').findOne({email: this.email});
-        return user;
+        return await UserModel.findOne({ email: this.email });
     }
 
-    async findById(){
-        if(!this.id){
+    async findById() {
+        if (!this.id) {
             return;
         }
-        const user = await db.getDb().collection('users').findOne({_id: this.id});
-        return user;
+        return await UserModel.findOne({ id: this.id });
     }
 
-    async findByPhone(){
-        if(!this.phone){
+    async findByPhone() {
+        if (!this.phone) {
             return;
         }
-        const user = await db.getDb().collection('users').findOne({phone: this.phone});
-        return user;
+        return await UserModel.findOne({ phone: this.phone });
     }
 
     async signUp() {
         const hashedPassword = await bcrypt.hash(this.password, 12);
 
-        const user = {
+        const user = new UserModel({
             name: this.name,
             email: this.email,
             phone: this.phone,
             password: hashedPassword,
-            role: 'user',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
-        await db.getDb().collection('users').insertOne(user);
-        return { ...user, _id: result.insertedId };
+            role: "user",
+        });
+
+        const savedUser = await user.save();
+        return savedUser.toObject(); // return plain object instead of mongoose doc
     }
 }
 

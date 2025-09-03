@@ -11,6 +11,14 @@ const cookieOpts = {
     secure: process.env.COOKIE_SECURE === 'true',
 };
 
+// const cookieOpts = {
+//     httpOnly: true,
+//     sameSite: "lax",
+//     secure: false,  // must be false on localhost
+//     path: "/",
+// };
+
+
 const rules = {
     login: [
         body('email').isEmail().withMessage('Valid email required').normalizeEmail(),
@@ -37,7 +45,10 @@ async function adminLogin(req, res) {
             return res.redirect('/admin/login');
         }
 
-        if (existingUser.role !== "admin") return res.status(403).send("Not allowed here");
+        if (existingUser.role !== "admin") {
+            res.status(403).send("Not allowed here");
+            return res.redirect('/login');
+        }
 
         console.log("User Found", existingUser);
         console.log("User password", enteredPassword);
@@ -56,10 +67,14 @@ async function adminLogin(req, res) {
 
         // Minimal JWT claims
         const payload = { sub: existingUser._id.toString(), email: existingUser.email, role: existingUser.role, name: existingUser.name };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '30m' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '1h' });
         console.log("Token", token);
         console.log("payload", payload);
+        // res.cookie('adminToken', token, cookieOpts);
+        console.log("Cookies before set:", req.cookies);
         res.cookie('token', token, cookieOpts);
+        console.log("Cookies after set header:", res.getHeader('Set-Cookie'));
+
         req.flash("alert", { type: "success", message: "Login successful!" });
         res.redirect('/admin/dashboard');
     } catch (e) {

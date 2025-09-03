@@ -11,6 +11,14 @@ const cookieOpts = {
     secure: process.env.COOKIE_SECURE === 'true',
 };
 
+// const cookieOpts = {
+//   httpOnly: true,
+//   sameSite: "lax",  // or "strict" in production
+//   secure: false,    // true only if using HTTPS
+//   path: "/",        // ensure cookie available on all routes
+// };
+
+
 const rules = {
     signup: [
         body('name').trim().isLength({ min: 3 }).withMessage('Name must be at least 3 chars'),
@@ -119,14 +127,14 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {
-    req.session.destroy((err) => {
-        if (err) console.error(err);
+    // req.session.destroy((err) => {
+    //     if (err) console.error(err);
 
-        // Clear cookies
-        res.clearCookie('connect.sid', { path: '/' });
-        res.clearCookie('_csrf', { path: '/' });
-    });
-    res.clearCookie('token');
+    //     // Clear cookies
+    //     res.clearCookie('connect.sid', { path: '/' });
+    //     res.clearCookie('_csrf', { path: '/' });
+    // });
+    res.clearCookie('token', { path: '/' });
     req.flash("alert", { type: "success", message: "Logout successful!" });
     res.redirect('/');
 }
