@@ -15,6 +15,9 @@ function handleValidation(req, res, next) {
   if (req.path.includes('admin/login')) {
     return res.status(400).render('admin/auth/login', { errors: mapped, old: req.body });
   }
+  if (req.path.includes('add-category')) {
+    return res.status(400).render('admin/page/category/add-category', { errors: mapped, old: req.body });
+  }
   // return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
   return res.status(400).render('error', { errors: mapped });

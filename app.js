@@ -8,6 +8,8 @@ const csrf = require('csurf');
 const session = require("express-session");
 const flash = require("connect-flash");
 const crypto = require("crypto");
+const multer = require("multer");
+const dayjs = require("dayjs");
 
 const { connectToDatabase } = require('./database/database');
 const { attachUser } = require('./middleware/authMiddleware');
@@ -48,7 +50,18 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/categories/assets/', express.static('uploads/categories'));
+app.use(
+  "/categories/assets/images",
+  express.static(path.join(__dirname, "public/uploads/categories/images"))
+);
 app.use(express.urlencoded({ extended: false }));
+
+// ---------------- Multer for multipart parsing ----------------
+// This will parse multipart/form-data WITHOUT storing files
+// So CSRF can still read `_csrf` from the body.
+const upload = multer();
+// app.use(upload.none());
 
 // ---------------- Cookies ----------------
 app.use(cookieParser());
@@ -61,9 +74,9 @@ app.use(
   csrf({
     cookie: {
       httpOnly: true,          // token cookie not accessible by JS
-      sameSite: process.env.SAMESITE || 'strict',
-      secure: process.env.COOKIE_SECURE === 'true',
-      // path: "/",
+      sameSite: process.env.SAMESITE || 'lax',
+      secure: process.env.COOKIE_SECURE === 'false',
+      path: "/",
     },
   })
 );
@@ -71,6 +84,18 @@ app.use(
 
 // ---------------- Custom Middleware ----------------
 app.use(addCsrfTokenMiddleware);
+
+// ---------------- Current URL Middleware ----------------
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path; // available in all EJS templates
+  next();
+});
+
+// ---------------- Date Library Middleware ----------------
+app.use((req, res, next) => {
+  res.locals.dayjs = dayjs; // available in all EJS templates
+  next();
+});
 
 // ---------------- Routes ----------------
 app.use('/admin', adminRoutes);  // Admin login + dashboard

@@ -1,125 +1,48 @@
 const mongoose = require("mongoose");
+const Category = require("../models/Admin/Category"); // your class
 
-// --- Your Category Schema ---
-const categorySchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true, trim: true },
-  short_name: { type: String, required: true, unique: true, trim: true },
-  created_by: String,
-  modified_by: String,
-  createdAt: Date,
-  updatedAt: Date,
-});
+require("dotenv").config();
 
-const Category = mongoose.model("Category", categorySchema);
-
-// --- Categories Data ---
-const categories = [
-  {
-    name: "Electronics",
-    short_name: "electronics",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Fashion",
-    short_name: "fashion",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Home & Kitchen",
-    short_name: "home_kitchen",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Beauty & Personal Care",
-    short_name: "beauty",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Sports & Outdoors",
-    short_name: "sports",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Books",
-    short_name: "books",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Toys & Games",
-    short_name: "toys",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Health & Wellness",
-    short_name: "health",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Automotive",
-    short_name: "automotive",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    name: "Groceries",
-    short_name: "groceries",
-    created_by: "system",
-    modified_by: "system",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
-
-// --- Seeder Function ---
 async function seedCategories() {
   try {
-    // ✅ Connect to MongoDB
-    await mongoose.connect("mongodb://0.0.0.0:27017/e-commerce", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: process.env.DB_NAME,
     });
+    console.log("✅ Connected to MongoDB");
 
-    console.log("✅ MongoDB Connected");
+    // Optional: Clear old categories
+    // await mongoose.connection.db.collection("categories").deleteMany({});
 
-    // Clear old categories
-    await Category.deleteMany({});
-    console.log("🗑️ Old categories deleted");
+    const categoriesData = [
+      { name: "Electronics", slug: "electronics", created_by: "admin", meta_title: "Electronics", meta_description: "All electronic items", image: "electronics.jpg" },
+      { name: "Clothing", slug: "clothing", created_by: "admin", meta_title: "Clothing", meta_description: "Men & Women clothing", image: "clothing.jpg" },
+      { name: "Books", slug: "books", created_by: "admin", meta_title: "Books", meta_description: "All kinds of books", image: "books.jpg" },
+      { name: "Sports", slug: "sports", created_by: "admin", meta_title: "Sports", meta_description: "Sporting goods", image: "sports.jpg" },
+      { name: "Home & Kitchen", slug: "home-kitchen", created_by: "admin", meta_title: "Home & Kitchen", meta_description: "Home appliances", image: "home_kitchen.jpg" },
+      { name: "Toys", slug: "toys", created_by: "admin", meta_title: "Toys", meta_description: "Kids toys", image: "toys.jpg" },
+      { name: "Beauty", slug: "beauty", created_by: "admin", meta_title: "Beauty", meta_description: "Beauty products", image: "beauty.jpg" },
+      { name: "Automotive", slug: "automotive", created_by: "admin", meta_title: "Automotive", meta_description: "Car & bike accessories", image: "automotive.jpg" },
+      { name: "Health", slug: "health", created_by: "admin", meta_title: "Health", meta_description: "Health products", image: "health.jpg" },
+      { name: "Grocery", slug: "grocery", created_by: "admin", meta_title: "Grocery", meta_description: "Daily groceries", image: "grocery.jpg" },
+    ];
 
-    // Insert new categories
-    await Category.insertMany(categories);
-    console.log("🎉 Categories inserted successfully!");
+    for (let data of categoriesData) {
+      const category = new Category(
+        data.name,
+        data.slug,
+        data.created_by,
+        data.meta_title,
+        data.meta_description,
+        data.image
+      );
+      await category.save();
+    }
 
-    // Close connection
-    mongoose.connection.close();
+    console.log("✅ 10 Categories seeded successfully!");
   } catch (err) {
     console.error("❌ Error seeding categories:", err);
-    process.exit(1);
+  } finally {
+    await mongoose.disconnect();
   }
 }
 
