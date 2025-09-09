@@ -17,7 +17,7 @@ router.get('/categories', authMiddleware.requireAuth, authMiddleware.requireAdmi
 router.get('/add-category', authMiddleware.requireAuth, authMiddleware.requireAdmin, categoryController.getAddCategory);
 router.post('/add-category', authMiddleware.requireAuth, authMiddleware.requireAdmin, configuredMulterStorage, categoryController.rules.addCategory, categoryController.addCategory);
 router.get('/edit-category/:slug/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, categoryController.getEditCategory);
-// router.post('/edit-category/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, categoryController.rules.addCategory, categoryController.editCategory);
-// router.post('/delete-category/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, categoryController.deleteCategory);
+router.post('/edit-category/:slug/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, configuredMulterStorage, categoryController.rules.editCategory, categoryController.editCategory);
+router.post('/set-inactive-category/:id', authMiddleware.requireAuth, authMiddleware.requireAdmin, categoryController.setInactiveCategory);
 
 module.exports = router;

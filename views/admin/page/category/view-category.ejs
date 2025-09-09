@@ -1,6 +1,7 @@
 <%- include('../../includes/head', {pageTitle: 'Category' }) %>
     </head>
     <%- include('../../includes/sidebar')%>
+    <%- include('../../../common/partials/alert') %>
         <!--begin::Content-->
         <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
             <!--begin::Toolbar-->
@@ -19,7 +20,7 @@
                     <!--begin::Actions-->
                     <div class="d-flex align-items-center gap-2 gap-lg-3">
                         <!--begin::Primary button-->
-                        <a href="../../demo1/dist/apps/ecommerce/catalog/add-product.html"
+                        <a href="/admin/add-category"
                             class="btn btn-sm btn-primary">Add
                             Category</a>
                         <!--end::Primary button-->
@@ -61,7 +62,7 @@
                                                 <td>
                                                     <div class="d-flex">
                                                         <!--begin::Thumbnail-->
-                                                        <a href=""
+                                                        <a href="/admin/edit-category/<%= category.slug %>/<%= category._id %>"
                                                             class="symbol symbol-60px symbol-2by3">
                                                             <img class="symbol-label" src="/categories/assets/images/<%= category.image %>"
                                                             alt="<%= category.name %>">
@@ -69,7 +70,7 @@
                                                         <!--end::Thumbnail-->
                                                         <div class="ms-5">
                                                             <!--begin::Title-->
-                                                            <a href=""
+                                                            <a href="/admin/edit-category/<%= category.slug %>/<%= category._id %>"
                                                                 class="text-gray-800 text-hover-primary fs-5 fw-bolder
                                                                 mb-1"><%= category.name %></a>
                                                             <!--end::Title-->
@@ -78,6 +79,11 @@
                                                                 <%= category.created_by %>
                                                             </div>
                                                             <!--end::Description-->
+                                                            <% if(category.is_active === true) { %>
+                                                                <span class="badge badge-light-success fs-7">Active</span>
+                                                            <% } else { %>
+                                                                <span class="badge badge-light-warning fs-7">Inactive</span>
+                                                            <% } %>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -86,7 +92,7 @@
                                                 <td>
                                                     <!--begin::Badges-->
                                                     <span
-                                                        class="text-dark fw-bolder d-block fs-7">{{App\Models\Product::where('category_id',$category->id)->count()}}</span>
+                                                        class="text-dark fw-bolder d-block fs-7">product count</span>
                                                     <!--end::Badges-->
                                                 </td>
                                                 <!--end::Type=-->

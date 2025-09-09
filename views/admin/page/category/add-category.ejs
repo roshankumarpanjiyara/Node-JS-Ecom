@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="/css/custom-bg-image.css">
     </head>
     <%- include('../../includes/sidebar') %>
+    <%- include('../../../common/partials/alert') %>
         <!--begin::Content-->
         <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
             <!--begin::Toolbar-->
@@ -137,7 +138,7 @@
                                 <div class="card-body pt-0">
                                     <!--begin::Select2-->
                                     <select class="form-select mb-2" data-control="select2" data-hide-search="true"
-                                        data-placeholder="Select an option"
+                                        data-placeholder="Select an option" name="is_active"
                                         id="kt_ecommerce_add_category_status_select">
                                         <option></option>
                                         <option value="published" selected="selected">Published</option>

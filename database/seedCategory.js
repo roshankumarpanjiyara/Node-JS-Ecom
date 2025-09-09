@@ -1,7 +1,100 @@
+// database/seedCategory.js
 const mongoose = require("mongoose");
-const Category = require("../models/Admin/Category"); // your class
-
+const Category = require("../models/Admin/Category");
 require("dotenv").config();
+
+const categories = [
+  {
+    name: "Electronics",
+    slug: "electronics",
+    created_by: "admin",
+    meta_title: "Buy Electronics Online",
+    meta_description: "Latest gadgets and electronics",
+    image: "electronics.png",
+    is_active: true,
+  },
+  {
+    name: "Fashion",
+    slug: "fashion",
+    created_by: "admin",
+    meta_title: "Trendy Fashion",
+    meta_description: "Latest fashion wear",
+    image: "fashion.png",
+    is_active: true,
+  },
+  {
+    name: "Home Appliances",
+    slug: "home-appliances",
+    created_by: "admin",
+    meta_title: "Home Essentials",
+    meta_description: "Modern home appliances",
+    image: "home-appliances.png",
+    is_active: true,
+  },
+  {
+    name: "Books",
+    slug: "books",
+    created_by: "admin",
+    meta_title: "Books Online",
+    meta_description: "All genres of books",
+    image: "books.png",
+    is_active: true,
+  },
+  {
+    name: "Sports",
+    slug: "sports",
+    created_by: "admin",
+    meta_title: "Sports Equipment",
+    meta_description: "Shop sports gear",
+    image: "sports.png",
+    is_active: true,
+  },
+  {
+    name: "Toys",
+    slug: "toys",
+    created_by: "admin",
+    meta_title: "Toys Online",
+    meta_description: "Toys for kids",
+    image: "toys.png",
+    is_active: true,
+  },
+  {
+    name: "Furniture",
+    slug: "furniture",
+    created_by: "admin",
+    meta_title: "Furniture Online",
+    meta_description: "Stylish furniture",
+    image: "furniture.png",
+    is_active: true,
+  },
+  {
+    name: "Beauty",
+    slug: "beauty",
+    created_by: "admin",
+    meta_title: "Beauty Products",
+    meta_description: "Cosmetics and beauty care",
+    image: "beauty.png",
+    is_active: true,
+  },
+  {
+    name: "Groceries",
+    slug: "groceries",
+    created_by: "admin",
+    meta_title: "Daily Groceries",
+    meta_description: "Fresh groceries",
+    image: "groceries.png",
+    is_active: true,
+  },
+  {
+    name: "Automobile",
+    slug: "automobile",
+    created_by: "admin",
+    meta_title: "Automobile Accessories",
+    meta_description: "Car and bike accessories",
+    image: "automobile.png",
+    is_active: true,
+  },
+];
 
 async function seedCategories() {
   try {
@@ -10,39 +103,15 @@ async function seedCategories() {
     });
     console.log("✅ Connected to MongoDB");
 
-    // Optional: Clear old categories
-    // await mongoose.connection.db.collection("categories").deleteMany({});
+    await mongoose.connection.db.collection("categories").deleteMany({});
+    console.log("🗑️ Old categories removed");
 
-    const categoriesData = [
-      { name: "Electronics", slug: "electronics", created_by: "admin", meta_title: "Electronics", meta_description: "All electronic items", image: "electronics.jpg" },
-      { name: "Clothing", slug: "clothing", created_by: "admin", meta_title: "Clothing", meta_description: "Men & Women clothing", image: "clothing.jpg" },
-      { name: "Books", slug: "books", created_by: "admin", meta_title: "Books", meta_description: "All kinds of books", image: "books.jpg" },
-      { name: "Sports", slug: "sports", created_by: "admin", meta_title: "Sports", meta_description: "Sporting goods", image: "sports.jpg" },
-      { name: "Home & Kitchen", slug: "home-kitchen", created_by: "admin", meta_title: "Home & Kitchen", meta_description: "Home appliances", image: "home_kitchen.jpg" },
-      { name: "Toys", slug: "toys", created_by: "admin", meta_title: "Toys", meta_description: "Kids toys", image: "toys.jpg" },
-      { name: "Beauty", slug: "beauty", created_by: "admin", meta_title: "Beauty", meta_description: "Beauty products", image: "beauty.jpg" },
-      { name: "Automotive", slug: "automotive", created_by: "admin", meta_title: "Automotive", meta_description: "Car & bike accessories", image: "automotive.jpg" },
-      { name: "Health", slug: "health", created_by: "admin", meta_title: "Health", meta_description: "Health products", image: "health.jpg" },
-      { name: "Grocery", slug: "grocery", created_by: "admin", meta_title: "Grocery", meta_description: "Daily groceries", image: "grocery.jpg" },
-    ];
-
-    for (let data of categoriesData) {
-      const category = new Category(
-        data.name,
-        data.slug,
-        data.created_by,
-        data.meta_title,
-        data.meta_description,
-        data.image
-      );
-      await category.save();
-    }
-
-    console.log("✅ 10 Categories seeded successfully!");
-  } catch (err) {
-    console.error("❌ Error seeding categories:", err);
+    await Category.save(categories);
+    console.log("✅ Categories inserted successfully");
+  } catch (error) {
+    console.error("❌ Error seeding categories:", error);
   } finally {
-    await mongoose.disconnect();
+    mongoose.connection.close();
   }
 }
 

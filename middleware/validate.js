@@ -1,6 +1,7 @@
+const Category = require('../models/Admin/Category');
 const { validationResult } = require('express-validator');
 
-function handleValidation(req, res, next) {
+async function handleValidation(req, res, next) {
   const errors = validationResult(req);
   if (errors.isEmpty()) return next();
 
@@ -17,6 +18,16 @@ function handleValidation(req, res, next) {
   }
   if (req.path.includes('add-category')) {
     return res.status(400).render('admin/page/category/add-category', { errors: mapped, old: req.body });
+  }
+  if (req.path.includes('edit-category')) {
+      const category = await Category.findById(req.params.id);
+      console.log(category);
+      // return res.status(400).json({ errors: mapped });
+      return res.status(400).render('admin/page/category/edit-category', {
+        category,
+        errors: mapped,
+        old: req.body
+      });
   }
   // return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
