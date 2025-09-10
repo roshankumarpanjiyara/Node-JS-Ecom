@@ -1,5 +1,5 @@
 <%- include('includes/head')%>
-    <link rel="stylesheet" href="css/custom.css">
+    <!-- <link rel="stylesheet" href="css/custom.css"> -->
     </head>
     <!-- <body> -->
     <%- include('includes/header')%>
@@ -8,6 +8,10 @@
             <div class="d-flex flex-center flex-column flex-column-fluid">
                 <!--begin::Wrapper-->
                 <div class="w-lg-500px p-10 p-lg-15 mx-auto">
+                    <% if (errors && errors.general) { %><span class="error invalid-feedback">
+                                    <%= errors.general.msg %>
+                                </span>
+                                <% } %>
                     <!--begin::Form-->
                     <form class="form w-100" novalidate="novalidate" action="/admin/login" method="POST">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -24,9 +28,9 @@
                             <label class="form-label fs-6 fw-bolder text-dark">Email</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-lg form-control-solid" type="text" name="email"
+                            <input class="form-control form-control-lg form-control-solid <%= (errors && errors.email) ? 'is-invalid' : '' %>" type="text" name="email"
                                 autocomplete="off" value="<%= (old && old.email) || '' %>" />
-                            <% if (errors && errors.email) { %><span class="error">
+                            <% if (errors && errors.email) { %><span class="error invalid-feedback">
                                     <%= errors.email.msg %>
                                 </span>
                                 <% } %>
@@ -44,10 +48,10 @@
                             </div>
                             <!--end::Wrapper-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-lg form-control-solid" type="password"
+                            <input class="form-control form-control-lg form-control-solid <%= (errors && errors.password) ? 'is-invalid' : '' %>" type="password"
                                 name="password" autocomplete="off" />
                             <!--end::Input-->
-                            <% if (errors && errors.password) { %><span class="error">
+                            <% if (errors && errors.password) { %><span class="error invalid-feedback">
                                     <%= errors.password.msg %>
                                 </span>
                                 <% } %>

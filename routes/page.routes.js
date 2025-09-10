@@ -8,6 +8,6 @@ router.get('/', pageController.home);
 // router.get('/login', (req, res) => res.redirect('/login'));
 // router.get('/register', (req, res) => res.redirect('/register'));
 
-router.get('/dashboard', authMiddleware.requireAuth, authMiddleware.requireUser, pageController.dashboard);
+router.get('/dashboard', authMiddleware.requireUserAuth, pageController.dashboard);
 
 module.exports = router;

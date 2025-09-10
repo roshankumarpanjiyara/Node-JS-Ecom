@@ -95,14 +95,14 @@ async function login(req, res) {
             return res.redirect('/login');
         }
 
-        // console.log("User Found", existingUser);
-        // console.log("User password", enteredPassword);
+        console.log("User Found", existingUser);
+        console.log("User password", enteredPassword);
 
         const passwordsAreEqual = await bcrypt.compare(
             enteredPassword,
             existingUser.password
         );
-        // console.log("Password Match", passwordsAreEqual);
+        console.log("Password Match", passwordsAreEqual);
 
         if (!passwordsAreEqual) {
             console.log("Password Error");
@@ -112,10 +112,10 @@ async function login(req, res) {
 
         // Minimal JWT claims
         const payload = { sub: existingUser._id.toString(), email: existingUser.email, role: existingUser.role, name: existingUser.name };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '30m' });
-        // console.log("Token", token);
-        // console.log("payload", payload);
-        res.cookie('token', token, cookieOpts);
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || '1hr' });
+        console.log("Token", token);
+        console.log("payload", payload);
+        res.cookie('userToken', token, cookieOpts);
         req.flash("alert", { type: "success", message: "Login successful!" });
         res.redirect('/dashboard');
     } catch (e) {
@@ -134,7 +134,7 @@ async function logout(req, res) {
     //     res.clearCookie('connect.sid', { path: '/' });
     //     res.clearCookie('_csrf', { path: '/' });
     // });
-    res.clearCookie('token', { path: '/' });
+    res.clearCookie('userToken', { path: '/' });
     req.flash("alert", { type: "success", message: "Logout successful!" });
     res.redirect('/');
 }

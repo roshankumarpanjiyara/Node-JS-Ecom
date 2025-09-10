@@ -1,61 +1,112 @@
 const jwt = require('jsonwebtoken');
 
-function requireAuth(req, res, next) {
-  const token = req.cookies?.token;
-  // if (!token) return res.redirect('/login');
-  if(!token) {
-    console.log('No token found in cookies');
+// -------- USER AUTH ----------
+function requireUserAuth(req, res, next) {
+  const token = req.cookies?.userToken;
+  if (!token) {
+    console.log('No user token found in cookies');
     return res.redirect('/login');
   }
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = payload; // { sub, email, role, iat, exp }
-    res.locals.user = payload; // use in EJS (navbar, etc.)
+    req.user = payload; // { sub, email, role }
+    res.locals.user = payload;
     next();
   } catch (e) {
-    console.warn('JWT verify failed:', e.message);
-    res.clearCookie('token');
+    console.warn('User JWT verify failed:', e.message);
+    res.clearCookie('userToken');
     return res.redirect('/login');
   }
 }
 
-function attachUser(req, res, next) {
-  const token = req.cookies?.token; // JWT stored in cookie
+// -------- ADMIN AUTH ----------
+function requireAdminAuth(req, res, next) {
+  const token = req.cookies?.adminToken;
   if (!token) {
-    req.user = null;
-    res.locals.user = null;
-    return next();
+    console.log('No admin token found in cookies');
+    return res.redirect('/admin/login');
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    // Attach user info to res.locals for EJS templates
-    res.locals.user = {
-      id: decoded.sub,
-      name: decoded.name,
-      email: decoded.email,
-      role: decoded.role,
-    };
-  } catch (err) {
-    // If token expired or invalid, treat as not logged in
-    req.user = null;
-    res.locals.user = null;
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.admin = payload; // { sub, email, role }
+    res.locals.admin = payload;
+    next();
+  } catch (e) {
+    console.warn('Admin JWT verify failed:', e.message);
+    res.clearCookie('adminToken');
+    return res.redirect('/admin/login');
   }
+}
+
+//---------ATTACH USER---------------
+function attachUser(req, res, next) {
+  // Try both tokens
+  const userToken = req.cookies?.userToken;
+  const adminToken = req.cookies?.adminToken;
+
+  let decoded = null;
+
+  try {
+    if (userToken) {
+      decoded = jwt.verify(userToken, process.env.JWT_SECRET);
+      req.user = decoded;
+      res.locals.user = {
+        id: decoded.sub,
+        name: decoded.name,
+        email: decoded.email,
+        role: decoded.role || "user", // keep compatibility
+      };
+    } else if (adminToken) {
+      decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
+      req.admin = decoded;
+      res.locals.admin = {
+        id: decoded.sub,
+        name: decoded.name,
+        email: decoded.email,
+        roles: decoded.roles || [], // array of roles
+      };
+    } else {
+      req.user = null;
+      req.admin = null;
+      res.locals.user = null;
+      res.locals.admin = null;
+    }
+  } catch (err) {
+    console.warn("JWT verify failed in attachUser:", err.message);
+    req.user = null;
+    req.admin = null;
+    res.locals.user = null;
+    res.locals.admin = null;
+  }
+
   next();
 }
 
+
+// -------- ROLES CHECKER ----------
 function requireRole(role, redirectPath = '/login') {
   return (req, res, next) => {
-    if (!req.user) return res.redirect(redirectPath);
-    if (req.user.role !== role) return res.status(403).send('Forbidden');
+    const actor = req.user || req.admin;
+    if (!actor) return res.redirect(redirectPath);
+    // actor.roles is now an array
+    if (!actor.roles || !actor.roles.includes(role)) {
+      return res.status(403).send('Forbidden');
+    }
     next();
   };
 }
 
 // Helpers
 const requireUser = requireRole("user", '/login');
-const requireAdmin = requireRole("admin", '/admin/login');
+const requireAdmin = requireRole("Admin", '/admin/login');
 
-module.exports = { requireAuth, requireRole, attachUser, requireUser, requireAdmin };
+module.exports = {
+  requireUserAuth,
+  requireAdminAuth,
+  requireRole,
+  requireUser,
+  requireAdmin,
+  attachUser
+};

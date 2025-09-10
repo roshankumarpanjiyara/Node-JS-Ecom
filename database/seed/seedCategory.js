@@ -1,6 +1,6 @@
 // database/seedCategory.js
 const mongoose = require("mongoose");
-const Category = require("../models/Admin/Category");
+const Category = require("../../models/Admin/Category");
 require("dotenv").config();
 
 const categories = [

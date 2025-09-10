@@ -32,6 +32,11 @@ class User {
         }
     }
 
+    static async getAllUsers() {
+        const users = await UserModel.find().lean();
+        return users;
+    }
+
     async findByEmail() {
         if (!this.email) {
             return;
