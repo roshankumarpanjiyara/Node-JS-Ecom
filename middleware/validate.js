@@ -29,6 +29,9 @@ async function handleValidation(req, res, next) {
         old: req.body
       });
   }
+  if (req.path.includes('admin/roles')) {
+    return res.status(400).render('admin/page/role/view-roles', { errors: mapped, old: req.body });
+  }
   // return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
   return res.status(400).render('error', { errors: mapped });

@@ -22,8 +22,29 @@ const pageRoutes = require('./routes/page.routes');
 
 const app = express();
 
+// ---------------- Nonce for CSP inline scripts ----------------
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  next();
+});
+
 // ---------------- Security & Performance ----------------
-app.use(helmet());
+// app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "script-src": [
+          "'self'",
+          (req, res) => `'nonce-${res.locals.nonce}'`
+        ],
+      },
+    },
+  })
+);
+
+
 app.use(compression());
 
 // ---------------- Session ----------------
@@ -37,12 +58,6 @@ app.use(session({
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.alert = req.flash("alert");
-  next();
-});
-
-// ---------------- Nonce for CSP inline scripts ----------------
-app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString("base64");
   next();
 });
 
@@ -74,8 +89,8 @@ app.use(
   csrf({
     cookie: {
       httpOnly: true,          // token cookie not accessible by JS
-      sameSite: process.env.SAMESITE || 'lax',
-      secure: process.env.COOKIE_SECURE === 'false',
+      sameSite: process.env.SAMESITE || 'strict',
+      secure: process.env.COOKIE_SECURE === 'true',
       path: "/",
     },
   })

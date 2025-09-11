@@ -1,13 +1,6 @@
 <% if (alert && alert.length> 0) { %>
   <script nonce="<%= nonce %>" src="/js/sweetalert2.all.min.js"></script>
-  <script>
-    // Swal.fire({
-    //   icon: '<%= alert[0].type %>',  // success | error
-    //   title: '<%= alert[0].message %>',
-    //   showConfirmButton: false,
-    //   timer: 2000
-    // });
-
+  <script nonce="<%= nonce %>">
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -24,4 +17,24 @@
       title: '<%= alert[0].message %>'
     });
   </script>
+  <!-- <script nonce="<%= nonce %>">
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "3000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+    toastr["<%= alert[0].type %>"]("<%= alert[0].message %>");
+  </script> -->
+
   <% } %>

@@ -1,4 +1,4 @@
-<% const acountPath = ['/admin/users']; %>
+<% const acountPath = ['/admin/all-admins', '/admin/all-users', '/admin/roles']; %>
 <% const utilitiesPath = ['/admin/categories', '/admin/add-category']; %>
 <!--begin::Body-->
 
@@ -324,19 +324,27 @@
                                 </span>
                                 <div class="menu-sub menu-sub-accordion menu-active-bg">
                                     <div class="menu-item">
-                                        <a class="menu-link <% (currentPath === '/admin/users') ? 'active' : '' %>" href="/admin/users">
+                                        <a class="menu-link <% (currentPath === '/admin/roles') ? 'active' : '' %>" href="/admin/roles">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Roles</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link <% (currentPath === '/admin/all-admins') ? 'active' : '' %>" href="/admin/all-admins">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">All Admins</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link <% (currentPath === '/admin/all-users') ? 'active' : '' %>" href="/admin/all-users">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">All Users</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/settings.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Settings</span>
                                         </a>
                                     </div>
                                     <div class="menu-item">

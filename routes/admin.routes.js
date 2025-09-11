@@ -3,6 +3,7 @@ const express = require('express');
 const configuredMulterStorage = require('../config/storage-config');
 const adminController = require('../controllers/AdminController');
 const categoryController = require('../controllers/Admin/CategoryController');
+const roleController = require('../controllers/Admin/RoleController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -13,10 +14,14 @@ router.post('/login', adminController.rules.login, adminController.adminLogin);
 
 router.get("/dashboard", authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.dashboard);
 
-//
-
+//role
+router.get('/roles', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.getAllRoles);
+router.post('/store-role', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.rules.addRole, roleController.create);
+router.post('/edit-role/:slug/:id', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.rules.addRole, roleController.editRole);
+router.post('/delete-role/:id', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.deleteRole);
 //user
-// router.get('/users', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.getAllUsers);
+router.get('/all-admins', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.getAllAdmin);
+router.get('/all-users', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.getAllUsers);
 // router.post('/edit-user/:id/:name', authMiddleware.requireAuth, authMiddleware.requireAdmin, adminController.rules.editUser, adminController.updateUser);
 
 //category

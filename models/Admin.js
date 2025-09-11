@@ -36,6 +36,10 @@ class Admin {
         }
     }
 
+    static async getAllAdmins(){
+        return await AdminModel.find().lean();
+    }
+
     async findByEmail() {
         if (!this.email) {
             return;
@@ -59,6 +63,10 @@ class Admin {
 
     static async populateDB(existingUser){
         return await AdminModel.populate(existingUser, { path: "roles" });
+    }
+
+    static async countDoc(role){
+        return await AdminModel.countDocuments({ roles: role._id });
     }
 }
 

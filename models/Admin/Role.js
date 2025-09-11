@@ -23,7 +23,7 @@ class Role{
     }
 
     static async getAllRoles(){
-        return await RoleModel.find().lean();
+        return await RoleModel.find().sort({name : 1}).lean();
     }
 
     static async getRoleById(id){
@@ -50,6 +50,27 @@ class Role{
 
         const savedRole = await role.save();
         return savedRole.toObject();
+    }
+
+    static async findOneRole(name, id){
+        const existingRole = await RoleModel.findOne({
+            name: name,
+            _id: { $ne: id }
+        });
+        return existingRole;
+    }
+
+    static async update(id, name, slug, description) {
+        const updatedRole = await RoleModel.findOneAndUpdate(
+            { _id: id },
+            { $set: { slug, name, description } },
+            { new: true, runValidators: true }
+        );
+        return updatedRole;
+    }
+
+    static async delete(id){
+        await RoleModel.findByIdAndDelete(id);
     }
 }
 

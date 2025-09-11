@@ -139,7 +139,7 @@ async function editCategory(req, res) {
     console.log(categoryDataId);
     try {
         if (!categoryDataId) {
-            req.flash("alert", { type: "danger", message: "Category not found" });
+            req.flash("alert", { type: "error", message: "Category not found" });
             return res.redirect('/admin/categories');
         }
         // console.log("Token in body:", req.body._csrf);

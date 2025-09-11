@@ -109,16 +109,23 @@ async function dashboard(req, res) {
 }
 
 
-// async function getAllUsers(req, res) {
-//     const users = await User.getAllUsers();
-//     res.render('admin/page/user/view-users', { users: users });
-// }
+async function getAllAdmin(req, res) {
+    let admins = await Admin.getAllAdmins();
+    admins = await Admin.populateDB(admins);
+    res.render('admin/page/user/view-admins', { admins: admins });
+}
+
+async function getAllUsers(req, res) {
+    const users = await User.getAllUsers();
+    res.render('admin/page/user/view-users', { users: users });
+}
 
 
 module.exports = {
     getAdminLogin: getAdminLogin,
     adminLogin: adminLogin,
     dashboard: dashboard,
-    // getAllUsers: getAllUsers,
+    getAllAdmin: getAllAdmin,
+    getAllUsers: getAllUsers,
     rules: rules,
 }
