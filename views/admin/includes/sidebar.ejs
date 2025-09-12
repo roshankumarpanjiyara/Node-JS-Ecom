@@ -1,4 +1,4 @@
-<% const acountPath = ['/admin/all-admins', '/admin/all-users', '/admin/roles']; %>
+<% const acountPath = ['/admin/all-admins', '/admin/all-users', '/admin/roles', '/admin/permissions']; %>
 <% const utilitiesPath = ['/admin/categories', '/admin/add-category']; %>
 <!--begin::Body-->
 
@@ -324,6 +324,14 @@
                                 </span>
                                 <div class="menu-sub menu-sub-accordion menu-active-bg">
                                     <div class="menu-item">
+                                        <a class="menu-link <% (currentPath === '/admin/permissions') ? 'active' : '' %>" href="/admin/permissions">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">User Permissions</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
                                         <a class="menu-link <% (currentPath === '/admin/roles') ? 'active' : '' %>" href="/admin/roles">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -345,14 +353,6 @@
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">All Users</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/security.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Security</span>
                                         </a>
                                     </div>
                                     <div class="menu-item">
@@ -2365,7 +2365,7 @@
                         <!--end::Aside mobile toggle-->
                         <!--begin::Mobile logo-->
                         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                            <a href="../../demo1/dist/index.html" class="d-lg-none">
+                            <a href="/admin/dashboard" class="d-lg-none">
                                 <img alt="Logo" src="/backend/dist/assets/media/logos/logo-2.svg" class="h-30px" />
                             </a>
                         </div>
@@ -7346,7 +7346,7 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-5">
-                                            <a href="../../demo1/dist/authentication/flows/basic/sign-in.html"
+                                            <a href="/admin/logout"
                                                 class="menu-link px-5">Sign Out</a>
                                         </div>
                                         <!--end::Menu item-->

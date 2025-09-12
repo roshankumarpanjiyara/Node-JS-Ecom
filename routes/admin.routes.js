@@ -4,6 +4,7 @@ const configuredMulterStorage = require('../config/storage-config');
 const adminController = require('../controllers/AdminController');
 const categoryController = require('../controllers/Admin/CategoryController');
 const roleController = require('../controllers/Admin/RoleController');
+const permissionController = require('../controllers/Admin/PermissionController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.get('/login', adminController.getAdminLogin);
 router.post('/login', adminController.rules.login, adminController.adminLogin);
+router.get('/logout', adminController.logout);
 
 router.get("/dashboard", authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.dashboard);
 
@@ -19,6 +21,9 @@ router.get('/roles', authMiddleware.requireAdminAuth, authMiddleware.requireAdmi
 router.post('/store-role', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.rules.addRole, roleController.create);
 router.post('/edit-role/:slug/:id', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.rules.addRole, roleController.editRole);
 router.post('/delete-role/:id', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, roleController.deleteRole);
+
+//permission
+router.get('/permissions', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, permissionController.getPermission);
 //user
 router.get('/all-admins', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.getAllAdmin);
 router.get('/all-users', authMiddleware.requireAdminAuth, authMiddleware.requireAdmin, adminController.getAllUsers);

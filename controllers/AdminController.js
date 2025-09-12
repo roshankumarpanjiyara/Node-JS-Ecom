@@ -104,6 +104,19 @@ async function adminLogin(req, res) {
     }
 }
 
+async function logout(req, res) {
+    // req.session.destroy((err) => {
+    //     if (err) console.error(err);
+
+    //     // Clear cookies
+    //     res.clearCookie('connect.sid', { path: '/' });
+    //     res.clearCookie('_csrf', { path: '/' });
+    // });
+    res.clearCookie('adminToken', { path: '/' });
+    req.flash("alert", { type: "success", message: "Logout successful!" });
+    res.redirect('/admin/login');
+}
+
 async function dashboard(req, res) {
     res.render('admin/page/dashboard');
 }
@@ -124,6 +137,7 @@ async function getAllUsers(req, res) {
 module.exports = {
     getAdminLogin: getAdminLogin,
     adminLogin: adminLogin,
+    logout: logout,
     dashboard: dashboard,
     getAllAdmin: getAllAdmin,
     getAllUsers: getAllUsers,
