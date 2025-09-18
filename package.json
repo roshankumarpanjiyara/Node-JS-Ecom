@@ -35,6 +35,7 @@
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.0",
     "multer": "^2.0.2",
+    "node-cache": "^5.1.2",
     "sweetalert2": "^11.22.5",
     "toastr": "^2.1.4"
   },

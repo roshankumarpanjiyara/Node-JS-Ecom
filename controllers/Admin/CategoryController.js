@@ -84,7 +84,7 @@ async function addCategory(req, res, next) {
         const uploadImage = req.file;
 
         const categoryData = await Category.findByName(name);
-        console.log("categoryData:", categoryData);
+        // console.log("categoryData:", categoryData);
         if (categoryData) {
             // cleanup file
             if (uploadImage) {
@@ -96,8 +96,8 @@ async function addCategory(req, res, next) {
             });
         }
 
-        console.log("data:", data);
-        console.log("is_active:", is_active);
+        // console.log("data:", data);
+        // console.log("is_active:", is_active);
         // console.log("Uploaded file:", uploadImage);
 
         const category = new Category({ name: name, slug: name.toLowerCase(name), created_by: req.user.name, meta_title: meta_title || null, meta_description: meta_description || null, image: uploadImage.filename, id: null, is_active: is_active });
@@ -136,7 +136,7 @@ async function getEditCategory(req, res) {
 
 async function editCategory(req, res) {
     const categoryDataId = await Category.findById(req.params.id);
-    console.log(categoryDataId);
+    // console.log(categoryDataId);
     try {
         if (!categoryDataId) {
             req.flash("alert", { type: "error", message: "Category not found" });

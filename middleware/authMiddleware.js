@@ -67,6 +67,7 @@ function attachUser(req, res, next) {
         email: decoded.email,
         roles: decoded.roles || [], // array of roles
       };
+      // console.log(res.locals.admin);
     } else {
       req.user = null;
       req.admin = null;
@@ -92,7 +93,7 @@ function requireRole(role, redirectPath = '/login') {
     if (!actor) return res.redirect(redirectPath);
     // actor.roles is now an array
     if (!actor.roles || !actor.roles.includes(role)) {
-      return res.status(403).send('Forbidden');
+      return res.status(403).redirect('/403');
     }
     next();
   };

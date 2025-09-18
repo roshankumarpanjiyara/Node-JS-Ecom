@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 
 async function handleValidation(req, res, next) {
   const errors = validationResult(req);
+  console.log(req.path);
   if (errors.isEmpty()) return next();
 
   // If it’s a form submit, re-render with messages
@@ -20,21 +21,50 @@ async function handleValidation(req, res, next) {
     return res.status(400).render('admin/page/category/add-category', { errors: mapped, old: req.body });
   }
   if (req.path.includes('edit-category')) {
-      const category = await Category.findById(req.params.id);
-      console.log(category);
-      // return res.status(400).json({ errors: mapped });
-      return res.status(400).render('admin/page/category/edit-category', {
-        category,
-        errors: mapped,
-        old: req.body
-      });
+    const category = await Category.findById(req.params.id);
+    console.log(category);
+    // return res.status(400).json({ errors: mapped });
+    return res.status(400).render('admin/page/category/edit-category', {
+      category,
+      errors: mapped,
+      old: req.body
+    });
   }
-  if (req.path.includes('admin/roles')) {
-    return res.status(400).render('admin/page/role/view-roles', { errors: mapped, old: req.body });
+  if (req.path.includes('store-role')) {
+    // return res.status(400).render('admin/page/role/view-roles', { errors: mapped, old: req.body });
+    req.flash("alert", {
+      type: "error",
+      message: Object.values(mapped).map(err => err.msg).join(", ")
+    });
+    req.flash("errors", mapped);
+    req.flash("old", req.body);
+    return res.redirect("/admin/roles");
+  }
+  if (req.path.includes('create-admin')) {
+    // return res.status(400).render('admin/page/user/view-admins', { errors: mapped, old: req.body });
+    let n = 0;
+    req.flash("alert", {
+      type: "error",
+      message: Object.values(mapped).map(err => `${++n}. ${err.msg}`).join(", \\n")
+    });
+    req.flash("errors", mapped);
+    req.flash("old", req.body);
+    return res.redirect("/admin/all-admins");
+  }
+  if (req.path.includes('update-admin')) {
+    // return res.status(400).render('admin/page/user/view-admins', { errors: mapped, old: req.body });
+    let n = 0;
+    req.flash("alert", {
+      type: "error",
+      message: Object.values(mapped).map(err => `${++n}. ${err.msg}`).join(", \\n")
+    });
+    req.flash("errors", mapped);
+    req.flash("old", req.body);
+    return res.redirect("/admin/all-admins");
   }
   // return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
-  return res.status(400).render('error', { errors: mapped });
+  return res.status(400).render(req.path, { errors: mapped });
 }
 
 module.exports = { handleValidation: handleValidation };

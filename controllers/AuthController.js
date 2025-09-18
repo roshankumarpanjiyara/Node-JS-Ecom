@@ -95,14 +95,14 @@ async function login(req, res) {
             return res.redirect('/login');
         }
 
-        console.log("User Found", existingUser);
-        console.log("User password", enteredPassword);
+        // console.log("User Found", existingUser);
+        // console.log("User password", enteredPassword);
 
         const passwordsAreEqual = await bcrypt.compare(
             enteredPassword,
             existingUser.password
         );
-        console.log("Password Match", passwordsAreEqual);
+        // console.log("Password Match", passwordsAreEqual);
 
         if (!passwordsAreEqual) {
             console.log("Password Error");

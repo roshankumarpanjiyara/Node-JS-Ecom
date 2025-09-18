@@ -15,6 +15,7 @@ const { connectToDatabase } = require('./database/database');
 const { attachUser } = require('./middleware/authMiddleware');
 const addCsrfTokenMiddleware = require('./middleware/csrf-token');
 const handleErrorMiddleware = require('./middleware/error-handler');
+const { hasPermission } = require('./middleware/checkPermission');
 
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -70,7 +71,7 @@ app.use(
   "/categories/assets/images",
   express.static(path.join(__dirname, "public/uploads/categories/images"))
 );
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // ---------------- Multer for multipart parsing ----------------
 // This will parse multipart/form-data WITHOUT storing files
@@ -111,6 +112,12 @@ app.use((req, res, next) => {
   res.locals.dayjs = dayjs; // available in all EJS templates
   next();
 });
+
+//------------------- Permission Middleware------------------
+app.use((req, res, next) => {
+  app.locals.hasPermission = hasPermission;
+  next();
+})
 
 // ---------------- Routes ----------------
 app.use('/admin', adminRoutes);  // Admin login + dashboard

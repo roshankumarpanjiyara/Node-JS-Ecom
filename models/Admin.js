@@ -1,6 +1,7 @@
-// models/Admin.js (super admin + vendor + departments)
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
+
+const Role = require('../models/Admin/Role');
 
 const adminSchema = new mongoose.Schema(
     {
@@ -61,12 +62,41 @@ class Admin {
         return await AdminModel.findOne({ phone: this.phone });
     }
 
+    static async findByIdAndEmail(id, email){
+        return await AdminModel.findOne({ id: id, email: email});
+    }
+
+    static async findOneAdminPhone(phone, id){
+        const existingAdmin = await AdminModel.findOne({
+            phone: phone,
+            _id: { $ne: id }
+        });
+        return existingAdmin;
+    }
+
     static async populateDB(existingUser){
         return await AdminModel.populate(existingUser, { path: "roles" });
     }
 
     static async countDoc(role){
         return await AdminModel.countDocuments({ roles: role._id });
+    }
+
+    async save(){
+        const hashedPassword = await bcrypt.hash(this.password, 12);
+
+        const role = await Role.getRoleByName('Admin');
+
+        const admin = new AdminModel({
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            password: hashedPassword,
+            roles: [role._id]
+        });
+
+        const savedAdmin = await admin.save();
+        return savedAdmin.toObject();
     }
 }
 

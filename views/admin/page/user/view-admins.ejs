@@ -178,8 +178,8 @@
                                                             <!--begin::Modal body-->
                                                             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                                                                 <!--begin:Form-->
-                                                                <form id="kt_modal_new_target_form" class="form" action="{{route('admins.update',[$admin->id])}}" method="post" enctype="multipart/form-data">@csrf
-                                                                    {{method_field('PATCH')}}
+                                                                <form id="kt_modal_new_target_form" class="form" action="/admin/update-admin/<%= user._id %>/<%= user.name %>" method="post">
+                                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                                                     <!--begin::Heading-->
                                                                     <div class="mb-13 text-center">
                                                                         <!--begin::Title-->
@@ -201,12 +201,37 @@
                                                                                     <span class="required">Name</span>
                                                                                 </label>
                                                                                 <!--end::Label-->
-                                                                                <input type="text" class="form-control form-control-solid" placeholder="Enter Name" name="name" value="{{$admin->name}}" autocomplete="off"/>
+                                                                                <input type="text" class="form-control form-control-solid <%= (errors && errors.name) ? 'is-invalid' : '' %>" placeholder="Enter Name" name="name" value="<%= user.name %>" autocomplete="off"/>
+                                                                                <% if (errors && errors.name) { %>
+                                                                                    <span class="error invalid-feedback">
+                                                                                        <%= errors.name.msg %>
+                                                                                    </span>
+                                                                                <% } %>
                                                                             </div>
                                                                             <!--end::Input group-->
                                                                             <!--begin::Input group-->
                                                                             <div class="d-flex flex-column mb-8">
-
+                                                                                <!--begin::Label-->
+                                                                                <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                                                                    <span class="required">Email</span>
+                                                                                </label>
+                                                                                <!--end::Label-->
+                                                                                <input type="text" class="form-control form-control-solid" placeholder="Enter Email" name="email" value="<%= user.email %>" readonly autocomplete="off"/>
+                                                                            </div>
+                                                                            <!--end::Input group-->
+                                                                            <!--begin::Input group-->
+                                                                            <div class="d-flex flex-column mb-8">
+                                                                                <!--begin::Label-->
+                                                                                <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                                                                    <span class="required">Phone</span>
+                                                                                </label>
+                                                                                <!--end::Label-->
+                                                                                <input type="text" class="form-control form-control-solid <%= (errors && errors.phone) ? 'is-invalid' : '' %>" placeholder="Enter Phone" name="phone" value="<%= user.phone %>" autocomplete="off"/>
+                                                                                <% if (errors && errors.phone) { %>
+                                                                                    <span class="error invalid-feedback">
+                                                                                        <%= errors.name.msg %>
+                                                                                    </span>
+                                                                                <% } %>
                                                                             </div>
                                                                             <!--end::Input group-->
                                                                         </div>
@@ -220,24 +245,34 @@
                                                                             <div class="d-flex flex-column mb-8 fv-row">
                                                                                 <!--begin::Label-->
                                                                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                                                                    <span class="required">Email</span>
+                                                                                    <span>Password</span>
                                                                                 </label>
                                                                                 <!--end::Label-->
-                                                                                <input type="text" class="form-control form-control-solid" placeholder="Enter Email" name="email" value="{{$admin->email}}" readonly autocomplete="off"/>
+                                                                                <input type="password" class="form-control form-control-solid <%= (errors && errors.password) ? 'is-invalid' : '' %>" placeholder="Enter Password" name="password" autocomplete="off"/>
+                                                                                <% if (errors && errors.phone) { %>
+                                                                                    <span class="error invalid-feedback">
+                                                                                        <%= errors.name.msg %>
+                                                                                    </span>
+                                                                                <% } %>
                                                                             </div>
                                                                             <!--end::Input group-->
                                                                             <!--begin::Input group-->
                                                                             <div class="d-flex flex-column mb-8 fv-row">
                                                                                 <!--begin::Label-->
                                                                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                                                                    <span class="required">Password</span>
+                                                                                    <span>Confirm Password</span>
                                                                                 </label>
                                                                                 <!--end::Label-->
-                                                                                <input type="password" class="form-control form-control-solid" placeholder="Enter Password" name="password" autocomplete="off"/>
+                                                                                <input type="password" class="form-control form-control-solid <%= (errors && errors.confirmPassword) ? 'is-invalid' : '' %>" placeholder="Enter Password" name="confirmPassword" autocomplete="off"/>
+                                                                                <% if (errors && errors.confirmPassword) { %>
+                                                                                    <span class="error invalid-feedback">
+                                                                                        <%= errors.confirmPassword.msg %>
+                                                                                    </span>
+                                                                                <% } %>
                                                                             </div>
                                                                             <!--end::Input group-->
-                                                                            <!--begin::Input group-->
-                                                                            <div class="d-flex flex-column mb-8 fv-row">
+                                                                            <!-- begin::Input group-->
+                                                                            <!-- <div class="d-flex flex-column mb-8 fv-row">
                                                                                 <label class="required fs-6 fw-bold mb-2">Assign Role</label>
                                                                                     <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
                                                                                         <option value="">Select user...</option>
@@ -245,15 +280,14 @@
                                                                                             <option value="{{$role->id}}"@if($admin->role_id==$role->id)selected @endif>{{$role->name}}</option>
                                                                                         @endforeach
                                                                                     </select>
-                                                                            </div>
-                                                                            <!--end::Input group-->
+                                                                            </div> -->
+                                                                            <!--end::Input group -->
                                                                             <!--begin::Input group-->
                                                                             <div class="d-flex flex-column mb-8 fv-row">
 
                                                                             </div>
                                                                             <!--end::Input group-->
                                                                             <!--begin::Actions-->
-                                                                            @if(isset(auth()->user()->role->permission['name']['user']['can-view']))
                                                                                 <div class="text-center">
                                                                                     <button type="reset" id="edit_user{{$admin->id}}_cancel"  data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
                                                                                     <button type="submit" id="edit_user{{$admin->id}}_submit" class="btn btn-primary">
@@ -262,7 +296,6 @@
                                                                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                                                                     </button>
                                                                                 </div>
-                                                                            @endif
                                                                             <!--end::Actions-->
                                                                         </div>
                                                                     </div>
@@ -354,7 +387,8 @@
                         <!--begin::Modal body-->
                         <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                             <!--begin:Form-->
-                            <form id="create_user_form" class="form" action="{{route('admins.store')}}" method="post" enctype="multipart/form-data">@csrf
+                            <form id="create_user_form" class="form" action="/admin/create-admin" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <!--begin::Heading-->
                                 <div class="mb-13 text-center">
                                     <!--begin::Title-->
@@ -376,17 +410,42 @@
                                                 <span class="required">Name</span>
                                             </label>
                                             <!--end::Label-->
-                                            <input type="text" class="form-control form-control-solid @error('name') is-invalid @enderror" placeholder="Enter Name" name="name" autocomplete="off"/>
-                                            @error('name')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
+                                            <input type="text" class="form-control form-control-solid <%= (errors && errors.name) ? 'is-invalid' : '' %>" placeholder="Enter Name" name="name" autocomplete="off" value="<%= (old && old.name) || '' %>"/>
+                                            <% if (errors && errors.name) { %>
+                                                <span class="error invalid-feedback">
+                                                    <%= errors.name.msg %>
                                                 </span>
-                                            @enderror
+                                            <% } %>
                                         </div>
                                         <!--end::Input group-->
                                         <!--begin::Input group-->
                                         <div class="d-flex flex-column mb-8">
-
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                                <span class="required">Email</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <input type="email" class="form-control form-control-solid <%= (errors && errors.email) ? 'is-invalid' : '' %>" placeholder="Enter Email" name="email" autocomplete="off" value="<%= (old && old.email) || '' %>"/>
+                                            <% if (errors && errors.email) { %>
+                                                <span class="error invalid-feedback">
+                                                    <%= errors.email.msg %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="d-flex flex-column mb-8">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                                <span class="required">Phone No.</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <input type="text" class="form-control form-control-solid <%= (errors && errors.phone) ? 'is-invalid' : '' %>" placeholder="Enter Phone" name="phone" autocomplete="off" value="<%= (old && old.phone) || '' %>"/>
+                                            <% if (errors && errors.phone) { %>
+                                                <span class="error invalid-feedback">
+                                                    <%= errors.phone.msg %>
+                                                </span>
+                                            <% } %>
                                         </div>
                                         <!--end::Input group-->
                                     </div>
@@ -400,36 +459,36 @@
                                         <div class="d-flex flex-column mb-8 fv-row">
                                             <!--begin::Label-->
                                             <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                                <span class="required">Email</span>
+                                                <span class="required">Password</span>
                                             </label>
                                             <!--end::Label-->
-                                            <input type="text" class="form-control form-control-solid @error('email') is-invalid @enderror" placeholder="Enter Email" name="email" autocomplete="off"/>
-                                            @error('email')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
+                                            <input type="password" class="form-control form-control-solid <%= (errors && errors.password) ? 'is-invalid' : '' %>" placeholder="Enter Password" name="password" autocomplete="off"/>
+                                            <% if (errors && errors.password) { %>
+                                                <span class="error invalid-feedback">
+                                                    <%= errors.password.msg %>
                                                 </span>
-                                            @enderror
+                                            <% } %>
                                         </div>
                                         <!--end::Input group-->
                                         <!--begin::Input group-->
                                         <div class="d-flex flex-column mb-8 fv-row">
                                             <!--begin::Label-->
                                             <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                                <span class="required">Password</span>
+                                                <span class="required">Confirm Password</span>
                                             </label>
                                             <!--end::Label-->
-                                            <input type="password" class="form-control form-control-solid @error('password') is-invalid @enderror" placeholder="Enter Password" name="password" autocomplete="off"/>
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
+                                            <input type="password" class="form-control form-control-solid <%= (errors && errors.confirmPassword) ? 'is-invalid' : '' %>" placeholder="Enter Password" name="confirmPassword" autocomplete="off"/>
+                                            <% if (errors && errors.confirmPassword) { %>
+                                                <span class="error invalid-feedback">
+                                                    <%= errors.confirmPassword.msg %>
                                                 </span>
-                                            @enderror
+                                            <% } %>
                                         </div>
                                         <!--end::Input group-->
                                         <!--begin::Input group-->
                                         <div class="d-flex flex-column mb-8 fv-row">
-                                            <label class="required fs-6 fw-bold mb-2">Assign Role</label>
-                                            <select class="form-select form-select-solid @error('role_id') is-invalid @enderror" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
+                                            <!-- <label class="required fs-6 fw-bold mb-2">Assign Role</label> -->
+                                            <!-- <select class="form-select form-select-solid @error('role_id') is-invalid @enderror" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
                                                 <option value="">Select user...</option>
                                                 @foreach(App\Models\Role::all() as $role)
                                                     <option value="{{$role->id}}">{{$role->name}}</option>
@@ -439,11 +498,10 @@
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
-                                            @enderror
+                                            @enderror -->
                                         </div>
                                         <!--end::Input group-->
                                         <!--begin::Actions-->
-                                        @if(isset(auth()->user()->role->permission['name']['user']['can-view']))
                                             <div class="text-center">
                                                 <button type="reset" data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
                                                 <button type="submit" id="create_admin_submit" class="btn btn-primary">
@@ -452,7 +510,6 @@
                                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                                 </button>
                                             </div>
-                                        @endif
                                         <!--end::Actions-->
                                     </div>
                                 </div>
@@ -472,4 +529,13 @@
     <!--end::Container-->
 </div>
 <!--end::Content-->
+    <% if ((alert && alert.length > 0 && alert[0].type !== 'success')) { %>
+                <script nonce="<%= nonce %>">
+                    document.addEventListener("DOMContentLoaded", function() {
+                    var modal = new bootstrap.Modal(document.getElementById("create_admin"));
+                    modal.show();
+                    });
+                </script>
+            <% } %>
+
     <%- include('../../includes/footer')%>

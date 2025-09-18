@@ -26,19 +26,10 @@ async function getAllRoles(req, res) {
         })
     );
 
-    res.render('admin/page/role/view-roles', { roles: rolesWithCounts, errors: {}, old: {} });
+    res.render('admin/page/role/view-roles', { roles: rolesWithCounts, errors: req.flash("errors")[0] || {}, old: req.flash("old")[0] || {} });
 }
 
 async function create(req, res) {
-    const roles = await Role.getAllRoles();
-
-    // attach user count to each role
-    const rolesWithCounts = await Promise.all(
-        roles.map(async (role) => {
-            const count = await Admin.countDoc(role);
-            return { ...role, userCount: count };
-        })
-    );
     try {
         const data = req.body;
         const roleName = data.name;
@@ -82,7 +73,7 @@ async function editRole(req, res) {
         const description = data.description;
 
         const existingRole = await Role.findOneRole(name, id);
-        console.log(existingRole);
+        // console.log(existingRole);
         if(existingRole){
             req.flash("alert", { type: "error", message: "Role already exists!" });
             return res.status(400).redirect('/admin/roles');
