@@ -25,12 +25,12 @@ const rules = {
             return true;
         }),
         body('name').isLength({ min: 1 }).withMessage('Category name required'),
-        body('meta_title').optional({ checkFalsy: true, nullable: true }) // allows null or empty
-            .matches(/^[A-Za-z\s]+$/)
-            .withMessage("Meta title must contain only alphabets"),
-        body('meta_description').optional({ checkFalsy: true, nullable: true }) // allows null or empty
-            .matches(/^[A-Za-z\s]+$/)
-            .withMessage("Meta description must contain only alphabets"),
+        // body('meta_title').optional({ checkFalsy: true, nullable: true }) // allows null or empty
+        //     .matches(/^[A-Za-z\s]+$/)
+        //     .withMessage("Meta title must contain only alphabets"),
+        // body('meta_description').optional({ checkFalsy: true, nullable: true }) // allows null or empty
+        //     .matches(/^[A-Za-z\s]+$/)
+        //     .withMessage("Meta description must contain only alphabets"),
         handleValidation,
     ],
     editCategory: [

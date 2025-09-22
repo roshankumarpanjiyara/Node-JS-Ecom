@@ -204,25 +204,41 @@ async function updateAdmin(req, res) {
         const data = req.body;
         const phone = data.phone;
 
-        let password = null;
+        // console.log(id);
+        // console.log(email);
 
-        let existingAdmin = Admin.findByIdAndEmail(id, email);
+        let password = '';
+
+        let existingAdmin = await Admin.findByIdAndEmail(id, email);
+        // console.log(existingAdmin);
         if(!existingAdmin){
             console.log("Admin not found");
             req.flash("alert", { type: "error", message: `Admin not found!` });
             return res.redirect('/admin/all-admins');
         }
 
-        // if(data.password != null){
+        existingAdmin = await Admin.findOneAdminPhone();
+        // console.log(existingAdmin);
+        if (existingAdmin) {
+            console.log("Admin found with this phone number");
+            req.flash("alert", { type: "error", message: `Admin already exists with phone no. ${phone}!` });
+            return res.redirect('/admin/all-admins');
+        }
 
-        // }
+        if(data.password && data.password.trim() !== ''){
+            password = data.password;
+        }
 
-        console.log(existingAdmin);
+        console.log(typeof password);
 
-        console.log(data);
+        // console.log(existingAdmin);
+        let updatedAdmin = new Admin(data.name, email, phone, password);
+        await updatedAdmin.save();
+
+        // console.log(updatedAdmin);
         req.flash("alert", { type: "success", message: `${data.name}'s profile is updated!` });
         res.redirect('/admin/all-admins');
-    } catch (e) {
+    } catch (err) {
         console.log(err);
         req.flash("alert", { type: "error", message: err.message });
         res.redirect('/admin/all-admins');

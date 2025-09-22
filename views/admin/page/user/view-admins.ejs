@@ -178,7 +178,7 @@
                                                             <!--begin::Modal body-->
                                                             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                                                                 <!--begin:Form-->
-                                                                <form id="kt_modal_new_target_form" class="form" action="/admin/update-admin/<%= user._id %>/<%= user.name %>" method="post">
+                                                                <form id="kt_modal_new_target_form" class="form" action="/admin/update-admin/<%= user._id %>/<%= user.email %>" method="post">
                                                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                                                     <!--begin::Heading-->
                                                                     <div class="mb-13 text-center">
@@ -229,7 +229,7 @@
                                                                                 <input type="text" class="form-control form-control-solid <%= (errors && errors.phone) ? 'is-invalid' : '' %>" placeholder="Enter Phone" name="phone" value="<%= user.phone %>" autocomplete="off"/>
                                                                                 <% if (errors && errors.phone) { %>
                                                                                     <span class="error invalid-feedback">
-                                                                                        <%= errors.name.msg %>
+                                                                                        <%= errors.phone.msg %>
                                                                                     </span>
                                                                                 <% } %>
                                                                             </div>
@@ -249,9 +249,9 @@
                                                                                 </label>
                                                                                 <!--end::Label-->
                                                                                 <input type="password" class="form-control form-control-solid <%= (errors && errors.password) ? 'is-invalid' : '' %>" placeholder="Enter Password" name="password" autocomplete="off"/>
-                                                                                <% if (errors && errors.phone) { %>
+                                                                                <% if (errors && errors.password) { %>
                                                                                     <span class="error invalid-feedback">
-                                                                                        <%= errors.name.msg %>
+                                                                                        <%= errors.password.msg %>
                                                                                     </span>
                                                                                 <% } %>
                                                                             </div>
@@ -276,9 +276,9 @@
                                                                                 <label class="required fs-6 fw-bold mb-2">Assign Role</label>
                                                                                     <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
                                                                                         <option value="">Select user...</option>
-                                                                                        @foreach(App\Models\Role::all() as $role)
-                                                                                            <option value="{{$role->id}}"@if($admin->role_id==$role->id)selected @endif>{{$role->name}}</option>
-                                                                                        @endforeach
+                                                                                        
+                                                                                            <option value=""></option>
+                                                                                        
                                                                                     </select>
                                                                             </div> -->
                                                                             <!--end::Input group -->
@@ -289,8 +289,8 @@
                                                                             <!--end::Input group-->
                                                                             <!--begin::Actions-->
                                                                                 <div class="text-center">
-                                                                                    <button type="reset" id="edit_user{{$admin->id}}_cancel"  data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
-                                                                                    <button type="submit" id="edit_user{{$admin->id}}_submit" class="btn btn-primary">
+                                                                                    <button type="reset" id="edit_user<%= user._id %>_cancel"  data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
+                                                                                    <button type="submit" id="edit_user<%= user._id %>_submit" class="btn btn-primary">
                                                                                         <span class="indicator-label">Update</span>
                                                                                         <span class="indicator-progress">Please wait...
                                                                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -488,17 +488,12 @@
                                         <!--begin::Input group-->
                                         <div class="d-flex flex-column mb-8 fv-row">
                                             <!-- <label class="required fs-6 fw-bold mb-2">Assign Role</label> -->
-                                            <!-- <select class="form-select form-select-solid @error('role_id') is-invalid @enderror" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
+                                            <!-- <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Select a Role" name="role_id">
                                                 <option value="">Select user...</option>
-                                                @foreach(App\Models\Role::all() as $role)
-                                                    <option value="{{$role->id}}">{{$role->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('role_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror -->
+                                                
+                                                    <option value=""></option>
+                                                
+                                            </select> -->
                                         </div>
                                         <!--end::Input group-->
                                         <!--begin::Actions-->
@@ -529,13 +524,13 @@
     <!--end::Container-->
 </div>
 <!--end::Content-->
-    <% if ((alert && alert.length > 0 && alert[0].type !== 'success')) { %>
+    <!-- <% if ((alert && alert.length > 0 && alert[0].type !== 'success')) { %>
                 <script nonce="<%= nonce %>">
                     document.addEventListener("DOMContentLoaded", function() {
                     var modal = new bootstrap.Modal(document.getElementById("create_admin"));
                     modal.show();
                     });
                 </script>
-            <% } %>
+            <% } %> -->
 
     <%- include('../../includes/footer')%>

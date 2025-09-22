@@ -37,36 +37,36 @@ class Admin {
         }
     }
 
-    static async getAllAdmins(){
+    static async getAllAdmins() {
         return await AdminModel.find().lean();
     }
 
     async findByEmail() {
-        if (!this.email) {
-            return;
-        }
+        // if (!this.email) {
+        //     return;
+        // }
         return await AdminModel.findOne({ email: this.email });
     }
 
     async findById() {
-        if (!this.id) {
-            return;
-        }
+        // if (!this.id) {
+        //     return;
+        // }
         return await AdminModel.findOne({ id: this.id });
     }
 
     async findByPhone() {
-        if (!this.phone) {
-            return;
-        }
+        // if (!this.phone) {
+        //     return;
+        // }
         return await AdminModel.findOne({ phone: this.phone });
     }
 
-    static async findByIdAndEmail(id, email){
-        return await AdminModel.findOne({ id: id, email: email});
+    static async findByIdAndEmail(id, email) {
+        return await AdminModel.findOne({ _id: id, email: email });
     }
 
-    static async findOneAdminPhone(phone, id){
+    static async findOneAdminPhone(phone, id) {
         const existingAdmin = await AdminModel.findOne({
             phone: phone,
             _id: { $ne: id }
@@ -74,29 +74,49 @@ class Admin {
         return existingAdmin;
     }
 
-    static async populateDB(existingUser){
+    static async populateDB(existingUser) {
         return await AdminModel.populate(existingUser, { path: "roles" });
     }
 
-    static async countDoc(role){
+    static async countDoc(role) {
         return await AdminModel.countDocuments({ roles: role._id });
     }
 
-    async save(){
-        const hashedPassword = await bcrypt.hash(this.password, 12);
+    async save() {
 
-        const role = await Role.getRoleByName('Admin');
+        if (this.id) {
+            const updateAdmin = {
+                name: this.name,
+                phone: this.phone
+            };
 
-        const admin = new AdminModel({
-            name: this.name,
-            email: this.email,
-            phone: this.phone,
-            password: hashedPassword,
-            roles: [role._id]
-        });
+            // console.log( typeof this.password);
 
-        const savedAdmin = await admin.save();
-        return savedAdmin.toObject();
+            if(this.password !== null){
+                const hashedPassword = await bcrypt.hash(this.password, 12);
+                updateAdmin.password = hashedPassword;
+            }
+
+            return await AdminModel.findOneAndUpdate(
+                {_id: this.id, email: this.email},
+                updateAdmin,
+                { new: true, runValidators: true }
+            );
+        } else {
+            const hashedPassword = await bcrypt.hash(this.password, 12);
+            const role = await Role.getRoleByName('Admin');
+
+            const admin = new AdminModel({
+                name: this.name,
+                email: this.email,
+                phone: this.phone,
+                password: hashedPassword,
+                roles: [role._id]
+            });
+
+            const savedAdmin = await admin.save();
+            return savedAdmin.toObject();
+        }
     }
 }
 

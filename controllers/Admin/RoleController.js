@@ -8,9 +8,9 @@ const rules = {
     addRole: [
         body('name').isLength({ min: 1 }).withMessage('Role name required'),
         body('name').isLength({ min: 1 }).matches(/^[A-Za-z\s]+$/).withMessage('Role name must contain only alphabets'),
-        body('description').optional({ checkFalsy: true, nullable: true }) // allows null or empty
-            .matches(/^[A-Za-z\s]+$/)
-            .withMessage("Description must contain only alphabets"),
+        // body('description').optional({ checkFalsy: true, nullable: true }) // allows null or empty
+        //     .matches(/^[A-Za-z\s]+$/)
+        //     .withMessage("Description must contain only alphabets"),
         handleValidation,
     ],
 };

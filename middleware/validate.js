@@ -62,9 +62,9 @@ async function handleValidation(req, res, next) {
     req.flash("old", req.body);
     return res.redirect("/admin/all-admins");
   }
-  // return res.status(400).json({ errors: mapped });
+  return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
-  return res.status(400).render(req.path, { errors: mapped });
+  // return res.status(400).render(req.path, { errors: mapped });
 }
 
 module.exports = { handleValidation: handleValidation };
