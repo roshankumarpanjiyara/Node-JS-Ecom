@@ -37,7 +37,7 @@ class Category {
 
     static async fetchAllCategories() {
         // const categories = await db.getDb().collection('categories').find().toArray();
-        const categories = await CategoryModel.find().lean();
+        const categories = await CategoryModel.find().lean().sort({ name: 1});
         // console.log(categories);
         return categories;
     }

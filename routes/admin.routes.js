@@ -5,6 +5,7 @@ const adminController = require('../controllers/AdminController');
 const categoryController = require('../controllers/Admin/CategoryController');
 const roleController = require('../controllers/Admin/RoleController');
 const permissionController = require('../controllers/Admin/PermissionController');
+const subCategoryController = require('../controllers/Admin/SubCategoryController');
 
 const authMiddleware = require('../middleware/authMiddleware');
 const {loadPermissions, checkPermission} = require('../middleware/checkPermission');
@@ -39,7 +40,7 @@ router.get('/all-admins', adminController.getAllAdmin);
 router.get('/all-users', adminController.getAllUsers);
 router.post('/create-admin', adminController.rules.addAdmin, adminController.createAdmin);
 router.post('/update-admin/:id/:email', adminController.rules.updateAdmin, adminController.updateAdmin);
-// router.post('/edit-user/:id/:name', authMiddleware.requireAuth, authMiddleware.requireAdmin, adminController.rules.editUser, adminController.updateUser);
+router.post('/delete-admin/:id', adminController.deleteAdmin);
 
 //category
 router.get('/categories',checkPermission("category", "can-view"), categoryController.getAllCategories);
@@ -49,4 +50,7 @@ router.get('/edit-category/:slug/:id',checkPermission("category", "can-view"), c
 router.post('/edit-category/:slug/:id',checkPermission("category", "can-view"), configuredMulterStorage, categoryController.rules.editCategory, categoryController.editCategory);
 router.post('/set-inactive-category/:id',checkPermission("category", "can-view"), categoryController.setInactiveCategory);
 
+//sub-category
+router.get('/sub-categories', subCategoryController.getAllSubCategories);
+router.post('/add-sub-category', subCategoryController.addSubCategory);
 module.exports = router;

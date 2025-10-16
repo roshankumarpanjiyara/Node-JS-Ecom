@@ -24,7 +24,7 @@ async function seed() {
     });
 
     // Hash passwords
-    const adminPass = await bcrypt.hash("Admin@123", 12);
+    const adminPass = await bcrypt.hash("User@123", 12);
     const userPass = await bcrypt.hash("User@123", 12);
 
     // Clear old users (optional)
@@ -33,11 +33,11 @@ async function seed() {
     // Insert admin and user
     await User.insertMany([
       {
-        name: "Super Admin",
-        email: "admin@example.com",
+        name: "User1",
+        email: "user1@example.com",
         phone: "1234567890",
         password: adminPass,
-        role: "admin",
+        role: "user",
       },
       {
         name: "Normal User",
@@ -48,8 +48,8 @@ async function seed() {
       },
     ]);
 
-    console.log("✅ Admin and User created successfully!");
-    console.log("👉 Admin login: admin@example.com / Admin@123");
+    console.log("✅ User1 and User created successfully!");
+    console.log("👉 User1 login: user1@example.com / User@123");
     console.log("👉 User login: user@example.com / User@123");
   } catch (err) {
     console.error("❌ Error seeding database:", err);

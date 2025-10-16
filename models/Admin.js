@@ -52,7 +52,7 @@ class Admin {
         // if (!this.id) {
         //     return;
         // }
-        return await AdminModel.findOne({ id: this.id });
+        return await AdminModel.findOne({ _id: this.id });
     }
 
     async findByPhone() {
@@ -87,15 +87,29 @@ class Admin {
         if (this.id) {
             const updateAdmin = {
                 name: this.name,
-                phone: this.phone
+                phone: this.phone,
+                // password: this.password
             };
 
-            // console.log( typeof this.password);
+            console.log(this.password);
 
-            if(this.password !== null){
+            let existingAdmin = await AdminModel.findById(this.id);
+
+            // const passwordsAreEqual = await bcrypt.compare(
+            //             enteredPassword,
+            //             existingUser.password
+            //         );
+
+            console.log(existingAdmin);
+
+            if(this.password !== null && this.password.trim() !== ''){
                 const hashedPassword = await bcrypt.hash(this.password, 12);
                 updateAdmin.password = hashedPassword;
+            }else{
+                updateAdmin.password = existingAdmin.password;
             }
+
+            console.log(updateAdmin);
 
             return await AdminModel.findOneAndUpdate(
                 {_id: this.id, email: this.email},
@@ -117,6 +131,10 @@ class Admin {
             const savedAdmin = await admin.save();
             return savedAdmin.toObject();
         }
+    }
+
+    static async delete(id){
+        await AdminModel.findByIdAndDelete(id);
     }
 }
 

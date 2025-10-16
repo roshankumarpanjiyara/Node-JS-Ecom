@@ -210,6 +210,12 @@ async function updateAdmin(req, res) {
         let password = '';
 
         let existingAdmin = await Admin.findByIdAndEmail(id, email);
+
+        const roles = existingAdmin.roles;
+        // password = existingAdmin.password;
+
+        // console.log(password);
+
         // console.log(existingAdmin);
         if(!existingAdmin){
             console.log("Admin not found");
@@ -217,7 +223,7 @@ async function updateAdmin(req, res) {
             return res.redirect('/admin/all-admins');
         }
 
-        existingAdmin = await Admin.findOneAdminPhone();
+        existingAdmin = await Admin.findOneAdminPhone(phone, id);
         // console.log(existingAdmin);
         if (existingAdmin) {
             console.log("Admin found with this phone number");
@@ -227,18 +233,33 @@ async function updateAdmin(req, res) {
 
         if(data.password && data.password.trim() !== ''){
             password = data.password;
+        }else{
+            password = null;
         }
 
-        console.log(typeof password);
+        // console.log(password);
 
         // console.log(existingAdmin);
-        let updatedAdmin = new Admin(data.name, email, phone, password);
+        let updatedAdmin = new Admin(data.name, email, phone, password, roles, id);
         await updatedAdmin.save();
 
         // console.log(updatedAdmin);
         req.flash("alert", { type: "success", message: `${data.name}'s profile is updated!` });
         res.redirect('/admin/all-admins');
     } catch (err) {
+        console.log(err);
+        req.flash("alert", { type: "error", message: err.message });
+        res.redirect('/admin/all-admins');
+    }
+}
+
+async function deleteAdmin(req, res){
+    try{
+        const id = req.params.id;
+        await Admin.delete(id);
+        req.flash("alert", { type: "success", message: "Admin profile deleted!" });
+        res.redirect('/admin/all-admins');
+    }catch(err){
         console.log(err);
         req.flash("alert", { type: "error", message: err.message });
         res.redirect('/admin/all-admins');
@@ -255,5 +276,6 @@ module.exports = {
     getAllUsers: getAllUsers,
     createAdmin: createAdmin,
     updateAdmin: updateAdmin,
+    deleteAdmin: deleteAdmin,
     rules: rules,
 }
