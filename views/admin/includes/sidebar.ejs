@@ -155,7 +155,7 @@
                                         </div>
                                     <% } %>
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                        <span class="menu-link">
+                                        <span class="menu-link <%= (utilitiesPath.includes(currentPath)) ? 'hover show' : '' %>">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -163,20 +163,12 @@
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                            <div class="menu-item">
+                                            <div class="menu-item <%= (currentPath === '/admin/sub-categories') ? 'active' : '' %>">
                                                 <a class="menu-link" href="/admin/sub-categories">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
                                                     <span class="menu-title">View Sub Categories</span>
-                                                </a>
-                                            </div>
-                                            <div class="menu-item">
-                                                <a class="menu-link" href="/admin/add-sub-category">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot"></span>
-                                                    </span>
-                                                    <span class="menu-title">Add Sub Category</span>
                                                 </a>
                                             </div>
                                         </div>

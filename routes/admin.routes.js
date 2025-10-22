@@ -52,5 +52,6 @@ router.post('/set-inactive-category/:id',checkPermission("category", "can-view")
 
 //sub-category
 router.get('/sub-categories', subCategoryController.getAllSubCategories);
-router.post('/add-sub-category', subCategoryController.addSubCategory);
+router.post('/add-sub-category', subCategoryController.rules.addSubCategory, subCategoryController.addSubCategory);
+router.get('/delete-sub-category/:id', subCategoryController.deleteSubCategory);
 module.exports = router;

@@ -62,6 +62,16 @@ async function handleValidation(req, res, next) {
     req.flash("old", req.body);
     return res.redirect("/admin/all-admins");
   }
+  if (req.path.includes('add-sub-category')) {
+    // return res.status(400).render('admin/page/role/view-roles', { errors: mapped, old: req.body });
+    req.flash("alert", {
+      type: "error",
+      message: Object.values(mapped).map(err => err.msg).join(", ")
+    });
+    req.flash("errors", mapped);
+    req.flash("old", req.body);
+    return res.redirect("/admin/sub-categories");
+  }
   return res.status(400).json({ errors: mapped });
   // fallback: still render generic error page
   // return res.status(400).render(req.path, { errors: mapped });

@@ -93,13 +93,13 @@
                                     <!--begin::Select2-->
                                     <select class="form-select mb-2 <%= (errors && errors.category) ? 'is-invalid' : '' %>" name="category" data-control="select2" data-placeholder="Select an option" data-allow-clear="true">
                                         <option></option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
+                                        <% categories.forEach(category => { %>
+                                            <option value="<%= category._id %>"><%= category.name %></option>
+                                        <% }) %>
                                     </select>
                                     <!--end::Select2-->
                                     <!--begin::Description-->
-                                    <div class="text-muted fs-7 mb-7">Add subcategory to a category.</div>
+                                    <div class="text-muted fs-7 mb-7">Add category to a subcategory.</div>
                                     <!--end::Description-->
                                     <!--end::Input group-->
                                     <!--begin::Button-->
@@ -159,21 +159,21 @@
                                     <!--begin::Table body-->
                                     <tbody>
                                         <% if (subCategories.length > 0) { %>
-                                            <% subCategories.forEach(category => { %>
+                                            <% subCategories.forEach(subcat => { %>
                                             <tr>
                                                 <td>
-                                                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{$subcategory->name}}</span>
+                                                    <span class="text-dark fw-bolder text-hover-primary fs-6"><%= subcat.name %></span>
                                                 </td>
                                                 <td>
-                                                    <span class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">{{$subcategory->created_by}}</span>
-                                                    <span class="text-muted fw-bold text-muted d-block fs-7">Date: {{$subcategory->created_at->format('D, d F Y')}}</span>
+                                                    <span class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6"><%= subcat.created_by %></span>
+                                                    <span class="text-muted fw-bold text-muted d-block fs-7">Date: <%= dayjs(subcat.createdAt).format("DD-MMM-YYYY").toUpperCase() %></span>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-light-success">{{$subcategory->category->name}}</span>
+                                                    <span class="badge badge-light-success"><%= subcat.category.name %></span>
                                                 </td>
                                                 <td class="text-end">
-                                                    <a href="{{route('subcategorys.destroy',[$subcategory->id])}}" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" id="delete">
-                                                        {{-- {{method_field('DELETE')}} --}}
+                                                    <a href="/admin/delete-sub-category/<%= subcat._id %>" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" id="delete">
+                                                        
                                                         <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
                                                         <span class="svg-icon svg-icon-3">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -212,4 +212,31 @@
     <!--end::Post-->
 </div>
 <!--end::Content-->
+<!-- <script src="/js/custom.js" nonce="<%= nonce %>"></script> -->
+<script nonce="<%= nonce %>">
+    document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#delete').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const link = e.currentTarget.getAttribute('href');
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Delete This Data?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = link;
+          Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+        }
+      });
+    });
+  });
+});
+
+</script>
 <%- include('../../includes/footer') %>

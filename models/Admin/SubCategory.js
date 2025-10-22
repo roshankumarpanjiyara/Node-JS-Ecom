@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 // ---------------- Category Schema ----------------
 const subCategorySchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true, trim: true },
-    slug: { type: String, required: true, unique: true, trim: true },
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, trim: true },
     created_by: { type: String, required: true, trim: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +31,26 @@ class SubCategory{
 
     static async getAllSubCategories(){
         return await SubCategoryModel.find().populate('category').sort({createdAt: -1});
+    }
+
+    static async findByName(name, category){
+      return await SubCategoryModel.findOne({name: name, category: category}).lean();
+    }
+
+    async save(){
+      const subCat = new SubCategoryModel({
+        name: this.name,
+        slug: this.name.toLowerCase().replace(/ /g, "-"),
+        created_by: this.created_by,
+        category: this.category
+      });
+
+      const savedSubCat = await subCat.save();
+      return savedSubCat.toObject();
+    }
+
+    static async delete(id){
+        await SubCategoryModel.findByIdAndDelete(id);
     }
 }
 

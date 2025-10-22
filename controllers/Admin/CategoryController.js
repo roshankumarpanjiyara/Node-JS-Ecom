@@ -51,14 +51,14 @@ const rules = {
 
             return true;
         }),
-        body("meta_title")
-            .optional({ checkFalsy: true, nullable: true })
-            .matches(/^[A-Za-z\s]+$/)
-            .withMessage("Meta title must contain only alphabets"),
-        body("meta_description")
-            .optional({ checkFalsy: true, nullable: true })
-            .matches(/^[A-Za-z\s]+$/)
-            .withMessage("Meta description must contain only alphabets"),
+        // body("meta_title")
+        //     .optional({ checkFalsy: true, nullable: true })
+        //     .matches(/^[A-Za-z\s]+$/)
+        //     .withMessage("Meta title must contain only alphabets"),
+        // body("meta_description")
+        //     .optional({ checkFalsy: true, nullable: true })
+        //     .matches(/^[A-Za-z\s]+$/)
+        //     .withMessage("Meta description must contain only alphabets"),
         handleValidation,
     ],
 };
@@ -83,9 +83,13 @@ async function addCategory(req, res, next) {
         const is_active = data.is_active === 'published' ? true : false;
         const uploadImage = req.file;
 
+        // console.log("categoryData:", data);
+
+        // console.log("------------------------ before findByName ------------------------");
         const categoryData = await Category.findByName(name);
-        // console.log("categoryData:", categoryData);
         if (categoryData) {
+            // console.log("------------------------ in findByName ------------------------");
+
             // cleanup file
             if (uploadImage) {
                 fs.unlinkSync(path.join(__dirname, "../../public/uploads/categories/images", uploadImage.filename));
@@ -96,12 +100,27 @@ async function addCategory(req, res, next) {
             });
         }
 
+        // console.log("------------------------ after findByName ------------------------");
+
         // console.log("data:", data);
         // console.log("is_active:", is_active);
         // console.log("Uploaded file:", uploadImage);
+        // console.log("Name", req.admin);
 
-        const category = new Category({ name: name, slug: name.toLowerCase(name), created_by: req.user.name, meta_title: meta_title || null, meta_description: meta_description || null, image: uploadImage.filename, id: null, is_active: is_active });
+        const newCategoryData = { 
+            name: name, 
+            slug: name.toLowerCase(name), 
+            created_by: req.admin.name, 
+            meta_title: meta_title || null, 
+            meta_description: meta_description || null, 
+            image: uploadImage.filename, 
+            id: null, 
+            is_active: is_active 
+        };
+        // console.log("newCategoryData:", newCategoryData);
+        const category = new Category(newCategoryData);
         await category.save();
+        // console.log("------------------------ after save ------------------------");
         req.flash("alert", { type: "success", message: "Category created" });
         res.redirect('/admin/categories');
     } catch (err) {
@@ -205,7 +224,7 @@ async function editCategory(req, res) {
     }
 }
 
-function setInactiveCategory(req, res){
+function setInactiveCategory(req, res) {
     res.redirect('/admin/categories');
 }
 
